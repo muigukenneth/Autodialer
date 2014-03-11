@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical" >
+
+  
+
+<ScrollView 
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+ 
+
+   
+
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+ <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" Menu"
+            style="@style/MenuDrawer.Widget.Category" />
+        <TextView
+            android:id="@+id/listsizzlingevent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/dialer"
+            android:text="Auto Dial Numbers"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        <TextView
+            android:id="@+id/listpostedevents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/groups"
+            android:text="Organise groups to Dial"
+            style="@style/MenuDrawer.Widget.Title" />
+        <TextView
+            android:id="@+id/listuserposted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/callhistory"
+            android:text="History of Calls"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        
+
+       
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tools"
+            style="@style/MenuDrawer.Widget.Category" />
+        <TextView
+            android:id="@+id/listsettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/settings_icon"
+            android:text="Settings"
+            style="@style/MenuDrawer.Widget.Title" />
+        
+ <TextView
+            android:id="@+id/listaccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/user_icon"
+            android:text="Account"
+            style="@style/MenuDrawer.Widget.Title" />
+        <TextView
+            android:id="@+id/listaboutapp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/about"
+            android:text="About App"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        <TextView
+            android:id="@+id/listsendfeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/send_icon"
+            android:text="Send Feedback"
+            style="@style/MenuDrawer.Widget.Title" />
+       <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="vertical">
+<ImageView
+        android:id="@+id/imagelogo"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mylogo" />
+  <TextView
+            android:id="@+id/terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=" Terms and Privacy"
+             />
+        <TextView
+            android:id="@+id/trademark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=" ⓒ 2013"
+            />
+       </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>

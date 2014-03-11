@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2010-present Facebook.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#303040" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+            <ImageView
+                android:id="@+id/splash_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:src="@drawable/sales_launcher" />
+            <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+           
+                android:textColor="#AFDEFE"
+                android:textSize="28sp"
+                android:typeface="serif"
+                android:textStyle="italic"
+                android:text="@string/app_name" />
+            <TextView
+        android:id="@+id/eventtexview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+      android:textColor="@color/White"  
+        android:layout_gravity="left"
+        android:text="Making sales made easy"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+           </LinearLayout> 
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            
+            android:lines="2"
+            android:textColor="@color/White"
+            android:textSize="17sp"
+            android:text="to get started login with your account"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"/>
+<EditText
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+             android:layout_marginTop="6dp"
+            android:hint="  Enter your E-mail"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/email"
+            android:background="@drawable/blue_gradient"
+            android:layout_below="@+id/textView"
+            android:layout_alignParentRight="true"
+            android:textSize="15dp"
+            android:textColor="#000000"/>
+
+ <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/blue_gradient"
+            android:layout_marginTop="4dp"
+             android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/pword"
+            android:hint=" Password"
+            android:layout_below="@+id/email"
+            android:layout_alignLeft="@+id/email"
+            android:textSize="15dp"
+            android:textColor="#000000"/>
+  <!--  Error message -->
+        <TextView android:id="@+id/loginErrorMsg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#e30000"
+                    android:padding="10dip"
+                    android:textStyle="bold"/>
+ <Button
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:text="Login"
+            android:id="@+id/login"
+            android:background="@drawable/button_gradient"
+            android:textSize="13dp"
+            android:textColor="#000000"
+            android:layout_gravity="center_horizontal"
+           />
+ <Button
+            android:id="@+id/passres"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:text="forgot password?"
+            android:textColor="#21dbd4"
+            android:textStyle="bold" />
+ 
+ 
+
+         <!--  Link to Registration Screen -->
+        <Button
+            android:id="@+id/registerbtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:text="don&apos;t have an account. Register Here"
+            android:textColor="#21dbd4"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

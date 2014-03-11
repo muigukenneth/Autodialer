@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="md__transparent">#00000000</color>
+
+    <color name="md__defaultBackground">#FF555555</color>
+    <color name="blue">#ff2570ba</color>
+    <color name="grey">#f7f7f7</color>
+
+     <color name="top_item">#a6c</color>
+    <color name="sticky_item">#f44</color>
+    <color name="sticky_item_text">#fff</color>
+</resources>
