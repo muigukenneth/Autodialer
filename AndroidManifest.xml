@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.autodialer"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.2" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="17"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,7 +18,8 @@
       <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    
+    <uses-permission android:name="android.permission.GET_TASKS" >
+</uses-permission>
     
      <permission
         android:name="com.autodialer.permission.C2D_MESSAGE"
@@ -28,11 +29,14 @@
     
     <application
         android:allowBackup="true"
+        
         android:icon="@drawable/sales_launcher"
         android:label="@string/app_name"
-        android:theme="@style/SampleTheme.Sherlock" >
+        
+        android:theme="@style/SampleThemeNew" >
         <activity
             android:name="com.autodialer.MainControl"
+             android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,6 +77,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <activity android:name="PopupActivity"
+             android:screenOrientation="portrait"
+  android:launchMode="singleInstance" android:excludeFromRecents="true"
+  android:taskAffinity="" android:theme="@style/NoTitleDialog" />
         <activity
             android:name="com.autodialer.Add_Update_User"
             android:configChanges="orientation"
@@ -92,9 +100,9 @@
         </service>
          <service android:name="com.autodialer.UpdateService" >
         </service>
-          <service android:name="com.autodialer.CheckOnlineService" >
+          <service android:name="com.autodialer.UpdateCallsFinishedService" >
         </service>
-          <service android:name="com.autodialer.CheckOfflineStatus" >
+          <service android:name="com.autodialer.LastStopService" >
         </service>
          
           <service android:name="com.autodialer.CheckMessageService" >
@@ -107,12 +115,13 @@
         </service>
          <service android:name="com.autodialer.CheckMessoVolleyService" >
         </service>
-         <service android:name="com.autodialer.SecondPopupService" >
+         <service android:name="com.autodialer.CheckBusyService" >
         </service>
-         <service android:name="com.autodialer.ThirdPopupService" >
+         <service android:name="com.autodialer.ClearBusyService" >
         </service>
-         <service android:name="com.autodialer.FourthPopupService" >
+         <service android:name="com.autodialer.CheckNoteidService" >
         </service>
     </application>
 
 </manifest>
+
