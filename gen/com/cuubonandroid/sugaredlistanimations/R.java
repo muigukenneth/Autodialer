@@ -8,20 +8,20 @@ package com.cuubonandroid.sugaredlistanimations;
 
 public final class R {
 	public static final class anim {
-		public static final int slide_up_left = 0x7f040000;
-		public static final int slide_up_right = 0x7f040001;
+		public static final int slide_up_left = 0x7f040002;
+		public static final int slide_up_right = 0x7f040003;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f02009b;
+		public static final int ic_launcher = 0x7f0200ac;
 	}
 	public static final class integer {
-		public static final int config_slide_time = 0x7f080002;
+		public static final int config_slide_time = 0x7f0a0008;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f070029;
+		public static final int app_name = 0x7f0b0011;
 	}
 	public static final class style {
-		public static final int AppBaseTheme = 0x7f0b005a;
-		public static final int AppTheme = 0x7f0b005b;
+		public static final int AppBaseTheme = 0x7f0d005c;
+		public static final int AppTheme = 0x7f0d005d;
 	}
 }

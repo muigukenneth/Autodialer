@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="NewApi">
+        <ignore path="src/com/autodialer/DailingMainActivity.java" />
         <ignore path="src/com/autodialer/MainControl.java" />
+        <ignore path="src/com/autodialer/TakeNote.java" />
+    </issue>
+    <issue id="ResourceAsColor" severity="ignore">
+        <ignore path="src/com/autodialer/DailingMainActivity.java" />
+        <ignore path="src/com/autodialer/TakeNote.java" />
     </issue>
 </lint>

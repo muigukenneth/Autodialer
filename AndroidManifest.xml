@@ -1,127 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.autodialer"
-    android:versionCode="2"
-    android:versionName="1.2" >
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest android:versionCode="2" android:versionName="1.2"
+    package="com.autodialer" xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
-    <uses-sdk
-        android:minSdkVersion="17"
-        android:targetSdkVersion="19" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-      <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.GET_TASKS" >
-</uses-permission>
-    
-     <permission
-        android:name="com.autodialer.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.autodialer.permission.C2D_MESSAGE" />
-    
-    <application
-        android:allowBackup="true"
-        
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+    <permission android:name="com.autodialer.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.autodialer.permission.C2D_MESSAGE"/>
+    <application android:allowBackup="true"
         android:icon="@drawable/sales_launcher"
         android:label="@string/app_name"
-        
-        android:theme="@style/SampleThemeNew" >
-        <activity
+        android:name="com.autodialer.MyApplication" android:theme="@style/SampleTheme.Sherlock">
+        <activity android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:name="com.autodialer.MainControl"
-             android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:screenOrientation="portrait" android:taskAffinity="">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.CALL_BUTTON" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                        
+<category android:name="android.intent.category.HOME" />                 
+<category android:name="android.intent.category.DEFAULT" />               
+<category android:name="android.intent.category.MONKEY"/>
+                <action android:name="android.intent.action.CALL_BUTTON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.CALL_PRIVILEGED" />
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.DIAL" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tel" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.DIAL"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="tel"/>
             </intent-filter>
         </activity>
-        
-         <receiver
-            android:name="com.autodialer.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+        <receiver android:name="IncomingCallInterceptor">
             <intent-filter>
-
-                <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="com.autodialer" />
+                <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
-
-        <service android:name="com.autodialer.GcmIntentService" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <activity android:name="PopupActivity"
-             android:screenOrientation="portrait"
-  android:launchMode="singleInstance" android:excludeFromRecents="true"
-  android:taskAffinity="" android:theme="@style/NoTitleDialog" />
+       
+        <receiver android:name="com.autodialer.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.autodialer"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.autodialer.GcmIntentService"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
+        <activity android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:name="PopupActivity"
+            android:screenOrientation="portrait" android:taskAffinity="" android:theme="@style/NoTitleDialog"/>
+        <activity android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:name="IncomingCall"
+            android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        <activity android:configChanges="orientation"
+            android:label="@string/tutorial_name" android:name="com.autodialer.MainActivity"/>
+        <activity android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:name="com.autodialer.TakeNote" android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" android:taskAffinity="" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
-            android:name="com.autodialer.Add_Update_User"
-            android:configChanges="orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.autodialer.TakeNote"
-            android:label="@string/title_activity_take_note" >
-        </activity>
-         <activity
-            android:name="com.autodialer.Login"
-           android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
-          <service android:name="com.autodialer.MyLikeService" >
-        </service>
-         <service android:name="com.autodialer.UpdateService" >
-        </service>
-          <service android:name="com.autodialer.UpdateCallsFinishedService" >
-        </service>
-          <service android:name="com.autodialer.LastStopService" >
-        </service>
-         
-          <service android:name="com.autodialer.CheckMessageService" >
-        </service>
-          <service android:name="com.autodialer.CallingService" >
-        </service>
-         <service android:name="com.autodialer.GetContactsService" >
-        </service>
-        <service android:name="com.autodialer.FirstPopupService" >
-        </service>
-         <service android:name="com.autodialer.CheckMessoVolleyService" >
-        </service>
-         <service android:name="com.autodialer.CheckBusyService" >
-        </service>
-         <service android:name="com.autodialer.ClearBusyService" >
-        </service>
-         <service android:name="com.autodialer.CheckNoteidService" >
-        </service>
+            android:name="com.autodialer.Login"
+            android:theme="@android:style/Theme.NoTitleBar" android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!--created by User at 2014-05-03 11:06:01-->
+        <service android:name="com.autodialer.MyLikeService"/>
+        <service android:name="com.autodialer.UpdateService"/>
+        <service android:name="com.autodialer.UpdateCallsFinishedService"/>
+        <service android:name="com.autodialer.LastStopService"/>
+        <service android:name="com.autodialer.CheckMessageService"/>
+        <service android:name="com.autodialer.CallingService"/>
+        <service android:name="com.autodialer.GetContactsService"/>
+        <service android:name="com.autodialer.FirstPopupService"/>
+        <service android:name="com.autodialer.CheckMessoVolleyService"/>
+        <service android:name="com.autodialer.CheckBusyService"/>
+        <service android:name="com.autodialer.ClearBusyService"/>
+        <service android:name="com.autodialer.CheckNoteidService"/>
+        <service android:name="com.autodialer.CheckContactExistService"/>
+        <activity android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog"/>
+        <!--created by User at 2014-05-14 21:54:22-->
+        <activity android:name=".TakeNoteIncomingCall" android:taskAffinity="" android:theme="@android:style/Theme.NoTitleBar"/>
     </application>
-
 </manifest>
-
