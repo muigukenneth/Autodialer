@@ -1,139 +1,205 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCCCCC"
+android:background="@color/White"
     android:orientation="vertical"
     android:paddingTop="1dp" >
-
-    <TextView
+     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+         android:id="@+id/google_now"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@style/GNowProgressBar"/>
+    
+<TextView
+        android:id="@+id/textViewcalling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:background="@color/Blue"
+        android:padding="5dp"
+        android:text="Calling ... "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFF" />
+   <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000000"
+       android:background="@color/Blue"
         android:padding="5dp"
-        android:text="Add a note about the call"
+        android:text="You can save the note alternatively here for contact "
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFFFFF" />
-
-       <RelativeLayout
-     android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:orientation="vertical"
-        android:padding="10dp" >
-
-    <TextView
-        android:id="@+id/textView1"
+<TextView
+        android:id="@+id/textViewcontact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:background="@color/Blue"
+        android:padding="5dp"
+        android:text="You can save the note alternatively here  "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFF" />
+<ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+         <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_marginTop="15dp"
+      android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+    android:orientation="horizontal" >
+ 
+        
+     <Button
+           android:id="@+id/declinetwo"
+           android:layout_width="100dp"
+           android:layout_height="50dp"
+           android:layout_marginLeft="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="2dp"
+           android:background="@color/Red"
+           android:text="Hang Up Call"
+           android:textColor="@color/white" />
+     
+     <Button
+        android:id="@+id/btnexit"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+      
+        android:background="@drawable/buttonselect"
+        android:onClick="addNewAnimal"
+        android:text="Back to Contacts"
+        android:textColor="@color/white" />
+     </LinearLayout>
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_marginTop="15dp"
+    android:orientation="horizontal" >
+ 
+    <CheckBox
+        android:id="@+id/cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="30dp"
-        android:text="About the call" />
-
-    <EditText
-        android:id="@+id/animalName"
+        android:visibility="gone"
+        android:text="hakuna" />
+    <ImageView
+        android:id="@+id/imageViewloadspeaker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:ems="10" >
+      
+        android:src="@drawable/loadspeaker" />
+ <ImageView
+        android:id="@+id/imageViewmute"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content"
+      
+        android:src="@drawable/mute_calls" />
+  <ImageView
+        android:id="@+id/imageViewrecord"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content"
+      
+        android:src="@drawable/record_call" />
+  </LinearLayout>
+    <LinearLayout
+     android:layout_width="fill_parent"
+     android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+     android:orientation="horizontal"
+       >
 
-        <requestFocus />
+     <EditText
+         android:id="@+id/etEdit"
+          android:background="@drawable/edittext_customisation"
+           android:layout_height="match_parent"
+      android:layout_weight="1"
+     android:hint="  enter a note"
+      android:lines="5"
+         android:singleLine="false"
+       android:layout_width="0dp"
+        android:inputType="text"
+         >
+     
+  <requestFocus />
+ 
     </EditText>
+        
+
     <Button
         android:id="@+id/btnadd"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-
-   <Button
-        android:id="@+id/btnaddtwo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
- <Button
-        android:id="@+id/btnaddthree"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-  <Button
-        android:id="@+id/btnaddfour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-   <Button
-        android:id="@+id/btnaddfive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-    <Button
-        android:id="@+id/btnaddsix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-     <Button
-        android:id="@+id/btnaddseven"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-      <Button
-        android:id="@+id/btnaddeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-       <Button
-        android:id="@+id/btnaddnine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-        <Button
-        android:id="@+id/btnaddten"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/animalName"
-        android:layout_below="@+id/animalName"
-        android:layout_marginTop="32dp"
-        android:text="Save"      
-    	android:onClick="addNewAnimal" />
-</RelativeLayout>
+        android:layout_height="35dp"
+      
+        android:background="@drawable/buttonselect"
+    
         
+        android:text="Save Note"
+        android:textColor="@color/white" />
+       </LinearLayout>
+   <TextView
+            android:layout_width="fill_parent"
+            android:textColor="#000000"
+            android:text="History of calls"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:id="@+id/textwelcome" android:textSize="20dp"/>
+     <LinearLayout
+        android:id="@+id/linlaHeaderProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+     
+
+        <ProgressBar
+            android:id="@+id/pbHeaderProgress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        
+        
+        </ProgressBar>
+              <TextView
+            android:id="@+id/loadingtext"       
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="loading records...." />
+    </LinearLayout>
+   
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+   
+<ListView
+            android:id="@+id/listcontacts"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:focusable="false"
+            android:dividerHeight="0dp"
+             android:divider="@null"
+            android:focusableInTouchMode="false" />
+
+       <TextView 
+    android:id="@+id/emptyResults"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+      android:gravity="center"
+    android:text="No History for this contact synced " />
+    </LinearLayout>
 
 </LinearLayout>

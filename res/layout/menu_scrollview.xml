@@ -30,22 +30,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/dialer"
-            android:text="Auto Dial Numbers"
+            android:text="Your Contacts"
             style="@style/MenuDrawer.Widget.Title" />
 
+      
         <TextView
-            android:id="@+id/listpostedevents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/groups"
-            android:text="Organise groups to Dial"
-            style="@style/MenuDrawer.Widget.Title" />
-        <TextView
-            android:id="@+id/listuserposted"
+            android:id="@+id/historyofcalls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/callhistory"
-            android:text="History of Calls"
+            android:text="Call History"
             style="@style/MenuDrawer.Widget.Title" />
 
         
@@ -86,30 +80,24 @@
             android:drawableLeft="@drawable/send_icon"
             android:text="Send Feedback"
             style="@style/MenuDrawer.Widget.Title" />
+        <TextView
+            android:id="@+id/listtutorial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/tutorial"
+            android:text="Tutorial"
+            style="@style/MenuDrawer.Widget.Title" />
        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:orientation="vertical">
-<ImageView
-        android:id="@+id/imagelogo"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:src="@drawable/mylogo" />
   <TextView
-            android:id="@+id/terms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=" Terms and Privacy"
-             />
-        <TextView
             android:id="@+id/trademark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text=" ⓒ 2013"
+            android:text=" Copyrightⓒ 2014 by DASH.All Rights Reserved"
             />
        </LinearLayout>
     </LinearLayout>

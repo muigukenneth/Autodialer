@@ -28,10 +28,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
-
 import com.cuubonandroid.sugaredlistanimations.SpeedScrollListener;
-
 
 import android.R.array;
 import android.app.Activity;
@@ -61,6 +58,8 @@ public class DialFragment extends SherlockFragment  {
 	private SpeedScrollListener listener;
 	private static final String LOG = "AUTO-DAILER-DEBBUG";
 	ArrayList<ItemParse> arrayOfList;
+	private HistoryAdapter plusAdapter;
+	 
 	  private static final String ARRAY_NAME = "contacts";
 		private static final String ID = "id";
 		private static final String NAME = "name";
@@ -70,7 +69,7 @@ public class DialFragment extends SherlockFragment  {
 		private static final String EMAIL = "Savedemail";
 		private static final String SECOND_NAME = "Secondname";
 		private RequestQueue mVolleyQueue2;
-		private DailingNumbersAdapter plusAdapter;
+		private DailingNumbersAdapter plusAdapter2;
 		private final String TAG_REQUEST = "MY_TAG";
 		JsonObjectRequest jsonObjRequesttwo;
 		 HashMap<String,String> user;
@@ -123,7 +122,7 @@ public class DialFragment extends SherlockFragment  {
 		  //  makeSampleHttpRequest2();
 		   
 		  //  Dailingmainmethod();
-		    plusAdapter = new DailingNumbersAdapter(getActivity(),listener,
+		    plusAdapter2 = new DailingNumbersAdapter(getActivity(),listener,
 					arrayOfList);
 		    
 	   		listnew.setAdapter(plusAdapter);
@@ -513,6 +512,7 @@ private void showToast(String msg) {
 				//	model.setEventLocation(jsonObj.getString(EVENT_GOOGLE));
 				//	model.setEventVenue(jsonObj.getString(EVENT_VENUE));
 					//model.setEventTime(jsonObj.getString(EVENT_TIME));
+	                    String id = Integer.toString(jsonObj.getInt(ID));
 					arrayOfList.add(model);
 					DatabaseHandler dbHandler = new DatabaseHandler(getActivity());
 					 dbHandler.Add_Contact(new Contact(name+""+secondname,

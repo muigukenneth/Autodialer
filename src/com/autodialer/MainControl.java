@@ -37,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,6 +46,18 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -77,6 +90,9 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.espian.showcaseview.ShowcaseView;
+import com.espian.showcaseview.ShowcaseViews;
+import com.espian.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -96,19 +112,24 @@ public class MainControl extends SherlockFragmentActivity   {
     public TextView accountdetails;
     public TextView maindialing;
     public TextView organisegroups;
+    public TextView tutorial;
     PendingIntent pendingIntent;
-    //AlarmManager alarmManager;
-    AlertDialog alert11;
-    AlertDialog.Builder builder1;
-    AlertDialog.Builder builder;
-	  AlertDialog alert;
+    SharedPreferences myPrefsnow;
+    private static final float SHOWCASE_KITTEN_SCALE = 1.2f;
+    private static final float SHOWCASE_LIKE_SCALE = 0.5f;
+    ShowcaseView.ConfigOptions mOptions = new ShowcaseView.ConfigOptions();
+    ShowcaseViews mViews;
+    
+    DatabaseHandler db;
     Fragment dailingfragment = new DialFragment();
     Fragment account=new AccountFragment();
     Fragment caltest=new DailingMainActivity();
+    Fragment tutorialfrag=new Tutorial();
     Boolean kenne;
     boolean shouldExecuteOnResume;
     JSONObject json;
-    
+    AlertDialog alertcall;
+    AlertDialog.Builder buildercall;
     // push  notification messages come here
 	 public static final String EXTRA_MESSAGE = "message";
 	    public static final String PROPERTY_REG_ID = "registration_id";
@@ -155,11 +176,11 @@ public class MainControl extends SherlockFragmentActivity   {
 				      Bundle bundle = intent.getExtras();
 				      if (bundle != null) {
 				    //    String string = bundle.getString(DownloadService.FILEPATH);
-				        int resultCode = bundle.getInt(CheckOnlineService.RESULT);
+				        int resultCode = bundle.getInt(LastStopService.RESULT);
 				        if (resultCode == Activity.RESULT_OK) {
 				        	
-				        //	  Toast.makeText(MainControl.this, "online status sent",
-						  //            Toast.LENGTH_LONG).show();
+				        	  Toast.makeText(MainControl.this, "last call recalled",
+						             Toast.LENGTH_LONG).show();
 				        //  Toast.makeText(getActivity(),
 				        //      "refreshing ",
 				          //    Toast.LENGTH_LONG).show();
@@ -175,32 +196,9 @@ public class MainControl extends SherlockFragmentActivity   {
 				    }
 				  };
 				  
-				  private BroadcastReceiver receiver3 = new BroadcastReceiver() {
-						 @Override
-						    public void onReceive(Context context, Intent intent) {
-						      Bundle bundle = intent.getExtras();
-						      if (bundle != null) {
-								    //    String string = bundle.getString(DownloadService.FILEPATH);
-								        int resultCode = bundle.getInt(GcmIntentService.RESULT);
-								        if (resultCode == Activity.RESULT_OK) {
-								        	
-								        	//  Toast.makeText(MainControl.this, "login status sent",
-										       //       Toast.LENGTH_LONG).show();
-								        //  Toast.makeText(getActivity(),
-								        //      "refreshing ",
-								        	 alert11.show();  
-								          //    Toast.LENGTH_LONG).show();
-								        //  textView.setText("Download done");
-								        } else {
-								         // Toast.makeText(MainControl.this, "login status not sent",
-								          //    Toast.LENGTH_LONG).show();
-								        	alert.show(); 
-							                
-								        //  textView.setText("Download failed");
-								        }
-								      }
-						    }
-						  };
+				 
+				  
+						 
     @Override
     public void onCreate(Bundle inState) {
         super.onCreate(inState);
@@ -219,6 +217,7 @@ public class MainControl extends SherlockFragmentActivity   {
    // setContentView(helper.createView(this));
   //  helper.initActionBar(this);
         shouldExecuteOnResume = false;
+        myPrefsnow = PreferenceManager.getDefaultSharedPreferences(MainControl.this);
         mMenuDrawer.setContentView(R.layout.main_control);
         mMenuDrawer.setMenuView(R.layout.menu_scrollview);
         mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
@@ -227,40 +226,9 @@ public class MainControl extends SherlockFragmentActivity   {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        
-        builder = new AlertDialog.Builder(MainControl.this);
-	     builder.setMessage("Ooops !Something fishey happened Check your Internet connection and Refresh!")
-	            .setCancelable(false)
-	            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int id) {
-	                     //do things
-	                }
-	            });
-	   alert = builder.create();
-	   
-		
-      builder1 = new AlertDialog.Builder(MainControl.this);
-       builder1.setMessage("Calls initiated from web?");
-       builder1.setCancelable(true);
-       builder1.setPositiveButton("Call ",
-               new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-           	FragmentManager fm = getSupportFragmentManager();
-
-           	//if you added fragment via layout xml
-           	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
-           	fragment.call();
-           //	call();	
-               dialog.cancel();
-           }
-       });
-       builder1.setNegativeButton("Cancel",
-               new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-               dialog.cancel();
-           }
-       });
-       alert11 = builder1.create();
+    	Intent intentlike=new Intent(MainControl.this,MyLikeService.class);
+      	MainControl.this.startService(intentlike);
+        db=new DatabaseHandler(MainControl.this);  
    	
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -270,56 +238,48 @@ public class MainControl extends SherlockFragmentActivity   {
         String message = bundle.getString("message");
 		try {
 			json = new JSONObject(message);
-			String stime = json.getString("name");
-			 int i=Integer.parseInt(stime);
-			 if(i == 1){
-				 builder = new AlertDialog.Builder(MainControl.this);
-			     builder.setMessage("Ooops !Something fishey happened Check your Internet connection and Refresh!")
-			            .setCancelable(false)
-			            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			                public void onClick(DialogInterface dialog, int id) {
-			                     //do things
-			                }
-			            });
-			   alert = builder.create();
-			   
-				
-		       builder1 = new AlertDialog.Builder(MainControl.this);
-		        builder1.setMessage("Calls initiated from web?");
-		        builder1.setCancelable(true);
-		        builder1.setPositiveButton("Call ",
-		                new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int id) {
-		            	FragmentManager fm = getSupportFragmentManager();
-
-		            	//if you added fragment via layout xml
-		            	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
-		            	fragment.call();
-		            //	call();	
-		                dialog.cancel();
-		            }
-		        });
-		        builder1.setNegativeButton("Cancel",
-		                new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		            }
-		        });
-		        alert11 = builder1.create();
-	        	 alert11.show();  
-			 }else{
-				 alert.show(); 
-			 }
-		//	name.setText(stime);
+			String contactname = json.getString("name");
+			String contactphone = json.getString("deal");
+			String contactid = json.getString("valid");
 			
-			String slecturename = json.getString("deal");
-			//deal.setText(slecturename);
+			String yourdata = db.getDetails(contactid);
 			
-			String sroom = json.getString("valid");
-			//valid.setText(sroom);
-			
-			String sfaculty = json.getString("address");
-			//address.setText(sfaculty);
+			  if(yourdata!=null)
+			  {
+			 int i=Integer.parseInt(yourdata);
+			//int intminus=i-1;
+			SharedPreferences.Editor editor = myPrefsnow.edit();
+			editor.putInt("num", i);
+			editor.commit(); 
+		//	Toast.makeText(MainControl.this,
+			 //   ""+intminus, Toast.LENGTH_LONG).show();
+			  }
+			// int i=Integer.parseInt(stime);
+			// int access=Integer.parseInt(entry);
+			buildercall = new AlertDialog.Builder(MainControl.this);
+	        buildercall.setMessage("Call for contact Name:"+contactname+" Phone:"+ contactphone +" initiated from web?");
+	        buildercall.setCancelable(true);
+	        buildercall.setPositiveButton("Call ",
+	                new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	            	FragmentManager fm = getSupportFragmentManager();
+	            	
+	            	//if you added fragment via layout xml
+	            	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
+	            	fragment.call();
+	            //	call();	
+	                dialog.cancel();
+	            	
+	            }
+	        });
+	        buildercall.setNegativeButton("Cancel",
+	                new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	            }
+	        });
+	        alertcall = buildercall.create();
+    		alertcall.show();		 
 			
 			
 		} catch (JSONException e) {
@@ -334,7 +294,7 @@ public class MainControl extends SherlockFragmentActivity   {
 
 	    //  StrictMode.setThreadPolicy(policy); 
 	      pd = new ProgressDialog(MainControl.this);
-	      pd.setMessage("Registering your device to our servers just a moment");
+	      pd.setMessage("Verifying your device.....");
 	      mVolleyQueue = Volley.newRequestQueue(MainControl.this); 
 	      context = getApplicationContext();
 	      context = getApplicationContext();
@@ -359,19 +319,22 @@ public class MainControl extends SherlockFragmentActivity   {
 		//alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
        // alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),3000, pendingIntent);
 		
-        Intent intentonline=new Intent(MainControl.this,CheckOnlineService.class);
-		MainControl.this.startService(intentonline);	
+    //    Intent intentonline=new Intent(MainControl.this,CheckOnlineService.class);
+		//MainControl.this.startService(intentonline);	
         maindialing=(TextView)findViewById(R.id.listsizzlingevent);
-        maindialing.setTextColor(getResources().getColor(R.color.LightGreen));
+        maindialing.setTextColor(getResources().getColor(R.color.blue));
         mMenuDrawer.setActiveView( maindialing);
         FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.replace(R.id.contentframe, caltest,"FRAGMENT_TAG");
 		transaction.commit();
+		
+		
 		maindialing .setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	maindialing.setTextColor(getResources().getColor(R.color.LightGreen));
+            	maindialing.setTextColor(getResources().getColor(R.color.blue));
             	  accountdetails.setTextColor(getResources().getColor(R.color.White));
+            	   tutorial.setTextColor(getResources().getColor(R.color.White));
             	  organisegroups.setTextColor(getResources().getColor(R.color.White));
             	mMenuDrawer.setActiveView(v);
             	mMenuDrawer.closeMenu();
@@ -389,7 +352,8 @@ public class MainControl extends SherlockFragmentActivity   {
 	               // Perform action on click   
 	        	   maindialing.setTextColor(getResources().getColor(R.color.White));
 	        	   organisegroups.setTextColor(getResources().getColor(R.color.White));
-	        	   accountdetails.setTextColor(getResources().getColor(R.color.LightGreen));
+	        	   tutorial.setTextColor(getResources().getColor(R.color.White));
+	        	   accountdetails.setTextColor(getResources().getColor(R.color.blue));
 	           	mMenuDrawer.setActiveView(v);
 	           	mMenuDrawer.closeMenu();
 	               mActiveViewId = v.getId();
@@ -404,7 +368,7 @@ public class MainControl extends SherlockFragmentActivity   {
 	              
 	           }
 		 });
-		 organisegroups=(TextView)findViewById(R.id.listpostedevents);
+		 organisegroups=(TextView)findViewById(R.id.historyofcalls);
 		 organisegroups .setOnClickListener(new View.OnClickListener() {
 	           public void onClick(View v) {
 	               // Perform action on click   
@@ -421,6 +385,27 @@ public class MainControl extends SherlockFragmentActivity   {
 	   		//	transaction.commit();
 	               // currentContext.startActivity(activityChangeIntent);
 
+	              
+	           }
+		 });
+		 tutorial=(TextView)findViewById(R.id.listtutorial);
+		 tutorial .setOnClickListener(new View.OnClickListener() {
+	           public void onClick(View v) {
+	        	   maindialing.setTextColor(getResources().getColor(R.color.White));
+	            	  accountdetails.setTextColor(getResources().getColor(R.color.White));
+	            	  organisegroups.setTextColor(getResources().getColor(R.color.White));
+	            	  tutorial.setTextColor(getResources().getColor(R.color.blue));
+	            	  Intent dialogIntent = new Intent(MainControl.this, MainActivity.class);
+	            	 MainControl.this .startActivity(dialogIntent);
+	            //	mMenuDrawer.setActiveView(v);
+	            //	mMenuDrawer.closeMenu();
+	              //  mActiveViewId = v.getId();
+	              //  FragmentManager fm = getSupportFragmentManager();
+	        	//	FragmentTransaction transaction = fm.beginTransaction();
+	        		//transaction.replace(R.id.contentframe, tutorialfrag,"FRAGMENT_TAG");
+	        		//transaction.addToBackStack("FRAGMENT_TAG").commit(); 
+	        		//transaction.commit();
+	              
 	              
 	           }
 		 });
@@ -472,14 +457,14 @@ public class MainControl extends SherlockFragmentActivity   {
           //  mDisplay.append(msg + "\n");
 			pd.dismiss(); 
 			Toast.makeText(MainControl.this,
-				      "your device has successfully been registered to our servers", Toast.LENGTH_SHORT).show();
+				      "your device has successfully been verified", Toast.LENGTH_SHORT).show();
         }
 		private void sendRegistrationIdToBackend() {
 		      // Your implementation here.
 			DatabaseHandlerUser db = new DatabaseHandlerUser(MainControl.this);
 			  HashMap<String,String> user = new HashMap<String, String>();
 		       user = db.getUserDetails();
-				String url = "http://globegokartshows.co.ke/Testing/server/getdevice.php";
+				String url = "http://dash.yt/salespacer/android_api/get_device_registration/getdevice.php";
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 	            params.add(new BasicNameValuePair("pid",user.get("email")));
 	            params.add(new BasicNameValuePair("regid", regid));
@@ -574,8 +559,8 @@ private static int getAppVersion(Context context) {
 	 //   Intent intent=new Intent(MainControl.this,CheckMessoVolleyService.class);
 	  //  MainControl.this.startService(intent);
 	   MainControl.this. registerReceiver(receiver, new IntentFilter(MyLikeService.NOTIFICATION));
-	   MainControl.this. registerReceiver(receiver2, new IntentFilter(CheckOnlineService.NOTIFICATION));
-	  MainControl.this. registerReceiver(receiver3, new IntentFilter(CheckMessoVolleyService.NOTIFICATION));
+	   MainControl.this. registerReceiver(receiver2, new IntentFilter(LastStopService.NOTIFICATION));
+	//  MainControl.this. registerReceiver(receiver3, new IntentFilter(GcmIntentService.NOTIFICATION));
     }
     @Override
     protected void onRestoreInstanceState(Bundle inState) {
@@ -586,7 +571,7 @@ private static int getAppVersion(Context context) {
 		super.onStop();
 		MainControl.this.unregisterReceiver(receiver);
 		MainControl.this.unregisterReceiver(receiver2);
-		MainControl.this.unregisterReceiver(receiver3);
+	//	MainControl.this.unregisterReceiver(receiver3);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -611,10 +596,14 @@ private static int getAppVersion(Context context) {
         final int drawerState = mMenuDrawer.getDrawerState();
         if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
             mMenuDrawer.closeMenu();
+          //moveTaskToBack(true);
+          
+            //Show toast to notify the user that your application is still running in the background
+            
             return;
         }
-        Intent intentonline=new Intent(MainControl.this,CheckOfflineStatus.class);
-		MainControl.this.startService(intentonline);	
+      //  Intent intentonline=new Intent(MainControl.this,CheckOfflineStatus.class);
+		//MainControl.this.startService(intentonline);	
 		
       //  WindowSample.this.finish();
         super.onBackPressed();

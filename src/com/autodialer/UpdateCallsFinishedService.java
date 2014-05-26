@@ -24,14 +24,14 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-public class CheckOnlineService extends Service {
+public class UpdateCallsFinishedService extends Service {
 
 	  private int result = Activity.RESULT_CANCELED;
 	  public static final String FILEPATH = "filepathtwo";
 	  public static final String RESULT = "result";
-	  public static final String NOTIFICATION = "com.autodialer.CheckOnlineService";
+	  public static final String NOTIFICATION = "com.autodialer.UpdateCallsFinishedService";
 
-	public CheckOnlineService() {
+	public UpdateCallsFinishedService() {
 	//	 super("Like Service");
 	}
 	private RequestQueue mVolleyQueue;
@@ -54,7 +54,7 @@ public class CheckOnlineService extends Service {
        params.put("pid",user.get("email"));
  	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
  	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
- 	CustomRequest request = new CustomRequest(Request.Method.POST, "http://www.globegokartshows.co.ke/Testing/status/online_status.php", params,
+ 	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/statuscheck/update_callsfinished.php", params,
  			new Response.Listener<JSONObject>() {
  	    @Override
  	    public void onResponse(JSONObject response) {

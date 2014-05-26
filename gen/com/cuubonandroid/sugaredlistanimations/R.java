@@ -12,7 +12,7 @@ public final class R {
 		public static final int slide_up_right = 0x7f040003;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f0200ac;
+		public static final int ic_launcher = 0x7f0200ad;
 	}
 	public static final class integer {
 		public static final int config_slide_time = 0x7f0a0008;

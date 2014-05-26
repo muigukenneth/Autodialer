@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,14 @@ public class PopupActivity extends Activity {
 		message=(TextView)findViewById(R.id.textmessage);
 		
 		 message.setText(messagenew);
-		
+		 final Handler handler = new Handler();
+	        handler.postDelayed(new Runnable() {
+	            public void run() {
+	                // TODO: Your application init goes here.
+	               
+	            	 PopupActivity.this.finish();
+	            }
+	        }, 3000);
 	}
 
 	

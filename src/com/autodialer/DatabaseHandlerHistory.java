@@ -16,18 +16,19 @@ public class DatabaseHandlerHistory extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "historyManager";
+    private static final String DATABASE_NAME = "HistoryManager";
 
     // Contacts table name
-    private static final String TABLE_CONTACTS = "history";
+    private static final String TABLE_CONTACTS = "History";
 
     // Contacts Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_PH_NO = "phone_number";
-    private static final String KEY_EMAIL = "email";
     private static final String KEY_NOTE = "takenote";
-    private final ArrayList<History> contact_list = new ArrayList<History>();
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_USERNAME = "username";
+    //private final ArrayList<History> contact_list = new ArrayList<History>();
 
     public DatabaseHandlerHistory(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +38,7 @@ public class DatabaseHandlerHistory extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 	String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
 		+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-		+ KEY_PH_NO + " TEXT,"+ KEY_NOTE + " TEXT," + KEY_EMAIL + " TEXT" + ")";
+		+ KEY_PH_NO + " TEXT,"+ KEY_NOTE + " TEXT," + KEY_EMAIL + " TEXT," + KEY_USERNAME + " TEXT" + ")";
 	db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -56,75 +57,100 @@ public class DatabaseHandlerHistory extends SQLiteOpenHelper {
      */
 
     // Adding new contact
-    public void Add_History(History history) {
+    public void Add_History(String name,String phone,String note,String email,String username) {
 	SQLiteDatabase db = this.getWritableDatabase();
 	ContentValues values = new ContentValues();
-	values.put(KEY_NAME, history.getName()); // Contact Name
-	values.put(KEY_PH_NO, history.getPhoneNumber()); // Contact Phone
-	values.put(KEY_NOTE, history.getNote());
-	values.put(KEY_EMAIL, history.getEmail()); // Contact Email
+	values.put(KEY_NAME, name); // Contact Name
+	values.put(KEY_PH_NO, phone); // Contact Phone
+	values.put(KEY_NOTE, note);
+	values.put(KEY_EMAIL, email); // Contact Email
+	values.put(KEY_USERNAME, username); // Contact Email
 	// Inserting Row
 	db.insert(TABLE_CONTACTS, null, values);
 	db.close(); // Closing database connection
     }
 
     // Getting single contact
-    Contact Get_Contact(int id) {
+    public Cursor Get_Note(int id) {
+    	
 	SQLiteDatabase db = this.getReadableDatabase();
 
 	Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-		KEY_NAME, KEY_PH_NO,KEY_NOTE, KEY_EMAIL }, KEY_ID + "=?",
+		KEY_NAME, KEY_PH_NO,KEY_NOTE, KEY_EMAIL,KEY_USERNAME }, KEY_ID + "=?",
 		new String[] { String.valueOf(id) }, null, null, null, null);
 	if (cursor != null)
 	    cursor.moveToFirst();
-
-	Contact contact = new Contact(Integer.parseInt(cursor.getString(0)),
-		cursor.getString(1), cursor.getString(2), cursor.getString(3));
-	// return contact
-	cursor.close();
+	 
+	
 	db.close();
+	 return cursor;  
+	//cursor.close();
+	
 
-	return contact;
+	//return contact;
+   }
+    public Cursor getAllData() {
+        String selectQuery = "Select * from "+TABLE_CONTACTS; 
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        return cursor;
+   }
+    
+    public void removeAll()
+    {
+    	 String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+
+ 	    SQLiteDatabase db = this.getWritableDatabase();
+ 	    Cursor cursor = db.rawQuery(selectQuery, null);
+    	if(cursor != null && cursor.getCount()>0){
+    		   cursor.moveToFirst();
+    		   //do your action
+    		   //Fetch your data
+    		  // SQLiteDatabase db = this.getWritableDatabase(); // helper is object extends SQLiteOpenHelper
+    	        db.delete(DatabaseHandlerHistory.TABLE_CONTACTS, null, null);
+
+    		}
+    		else {
+    	//	 Toast.makeText(getBaseContext(), "No records yet!", Toast.LENGTH_SHORT).show();
+    		    return;
+    		}  
+        // db.delete(String tableName, String whereClause, String[] whereArgs);
+        // If whereClause is null, it will delete all rows.
+       
+      //  db.delete(DatabaseHandler.TAB_USERS_GROUP, null, null);
     }
+    
+    public void delete()
+    
+    {
+    	// String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
 
-    // Getting All Contacts
-    public ArrayList<History> Get_History() {
-	try {
-	    contact_list.clear();
+  	    SQLiteDatabase db = this.getWritableDatabase();
+  	  Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='History'", null);
+  	if(cur != null && cur.getCount()>0){
+  	   cur.moveToFirst();
+  	   //do your action
+  	   //Fetch your data
+  	 
+  	
+  	          //  db.execSQL (catInsertArray[i]);
+  	        	String DELETEPASSCODE_DETAIL = "DELETE FROM "+TABLE_CONTACTS;
+                db.execSQL(DELETEPASSCODE_DETAIL); 
+  	        }
+  	    
+  	
+     		   //do your action
+     		   //Fetch your data
+     		  // SQLiteDatabase db = this.getWritableDatabase(); // helper is object extends SQLiteOpenHelper
+     		    
 
-	    // Select All Query
-	    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
-
-	    SQLiteDatabase db = this.getWritableDatabase();
-	    Cursor cursor = db.rawQuery(selectQuery, null);
-
-	    // looping through all rows and adding to list
-	    if (cursor.moveToFirst()) {
-		do {
-		    History history = new History();
-		    history.setID(Integer.parseInt(cursor.getString(0)));
-		    history.setName(cursor.getString(1));
-		    history.setPhoneNumber(cursor.getString(2));
-		    history.setNote(cursor.getString(3));
-		    history.setEmail(cursor.getString(4));
-		    
-		    // Adding contact to list
-		    contact_list.add(history);
-		} while (cursor.moveToNext());
-	    }
-
-	    // return contact list
-	    cursor.close();
-	    db.close();
-	    return contact_list;
-	} catch (Exception e) {
-	    // TODO: handle exception
-	    Log.e("all_contact", "" + e);
-	}
-
-	return contact_list;
-    }
-
+     		
+     		else {
+     			
+     	//	 Toast.makeText(getBaseContext(), "No records yet!", Toast.LENGTH_SHORT).show();
+     		}
+  	}
+         
     // Updating single contact
     public int Update_History(History history) {
 	SQLiteDatabase db = this.getWritableDatabase();
@@ -153,7 +179,7 @@ public class DatabaseHandlerHistory extends SQLiteOpenHelper {
 	String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
 	SQLiteDatabase db = this.getReadableDatabase();
 	Cursor cursor = db.rawQuery(countQuery, null);
-	cursor.close();
+	//cursor.close();
 
 	// return count
 	return cursor.getCount();

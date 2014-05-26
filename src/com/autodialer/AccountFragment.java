@@ -11,6 +11,10 @@ import java.io.InputStream;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.espian.showcaseview.ShowcaseView;
+import com.espian.showcaseview.ShowcaseViews;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,6 +41,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -54,11 +59,19 @@ import android.widget.Toast;
 
 public class AccountFragment extends Fragment  {
 	Button profilepic;
-	//Button fblogout;
+Button btnLogout;
 	ImageView profile;
-	Button btnLogout;
+	TextView textviewusername;
+	TextView textviewemail;
 	 DatabaseHandler db;
 	   DatabaseHandler dbHandler;
+	   HashMap<String,String> user;
+		 DatabaseHandlerUser dbtwo ;
+		 private static final float SHOWCASE_KITTEN_SCALE = 0.5f;
+		    private static final float SHOWCASE_LIKE_SCALE = 1.2f;
+		    ShowcaseView.ConfigOptions mOptions = new ShowcaseView.ConfigOptions();
+		    ShowcaseViews mViews;
+		    ShowcaseView sv;
 	  private BroadcastReceiver receiver2 = new BroadcastReceiver() {
 		  
 		  @Override
@@ -117,15 +130,21 @@ public class AccountFragment extends Fragment  {
       //      img.setImageResource(mArguments.getInt(ARG_IMAGE_RES));
        // }
         LinearLayout mLinearLayout =  (LinearLayout)inflater.inflate(R.layout.account,container, false);
-        profilepic =(Button)mLinearLayout.findViewById(R.id.buttonchangeprofile);
+        dbtwo= new DatabaseHandlerUser(getActivity());
+        dbHandler=new DatabaseHandler(getActivity());
+        user = new HashMap<String, String>();
+        user = dbtwo.getUserDetails();
+      //  profilepic =(Button)mLinearLayout.findViewById(R.id.buttonchangeprofile);
       //  fblogout =(Button)mLinearLayout.findViewById(R.id.buttonfblogout);
         btnLogout = (Button) mLinearLayout.findViewById(R.id.logout);
-        profile =(ImageView)mLinearLayout.findViewById(R.id.imageViewprofilepicture);
-      
-       
-        profilepic.setText("Change Profile Picture");
-        profilepic.setTextColor(Color.WHITE);
-        profilepic.setBackgroundResource(R.drawable.button_gradient);
+     //   profile =(ImageView)mLinearLayout.findViewById(R.id.imageViewprofilepicture);
+        textviewusername = (TextView) mLinearLayout.findViewById(R.id.textViewusername);
+        textviewemail = (TextView) mLinearLayout.findViewById(R.id.textViewemail);
+        textviewusername.setText("Username: "+user.get("uname"));
+        textviewemail .setText("Email Address:"+user.get("email"));
+       // profilepic.setText("Change Profile Picture");
+     //   profilepic.setTextColor(Color.WHITE);
+     //   profilepic.setBackgroundResource(R.drawable.button_gradient);
         btnLogout.setText("Logout");
         btnLogout.setTextColor(Color.WHITE);
         btnLogout.setBackgroundResource(R.drawable.button_gradient);
@@ -158,15 +177,46 @@ public class AccountFragment extends Fragment  {
                 editor.commit();
                 Intent intent=new Intent(getActivity(),UpdateService.class);
     			getActivity().startService(intent);	
-    			 Intent intentonline=new Intent(getActivity(),CheckOfflineStatus.class);
-    			 getActivity().startService(intentonline);
+    			// Intent intentonline=new Intent(getActivity(),ClearRegistrationService.class);
+    			// getActivity().startService(intentonline);
               
             }
         });    
         return mLinearLayout;
 	}
-	
-	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		 super.onActivityCreated(savedInstanceState);
+		 SharedPreferences wmbPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		 boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUNACTIVITY", true);
+		 if (isFirstRun)
+		 {
+			 mOptions.block = false;
+		        mOptions.hideOnClickOutside = false;
+
+		        mViews = new ShowcaseViews(getActivity(),
+		                new ShowcaseViews.OnShowcaseAcknowledged() {
+		            @Override
+		            public void onShowCaseAcknowledged(ShowcaseView showcaseView) {
+		                Toast.makeText(getActivity(), "quick tutorial finished", Toast.LENGTH_SHORT).show();
+		            }
+		        });
+		        mViews.addView( new ShowcaseViews.ItemViewProperties(R.id.logout,
+		                R.string.showcase_login_title,
+		                R.string.showcase_login_message,
+		                SHOWCASE_KITTEN_SCALE));
+		        mViews.addView( new ShowcaseViews.ItemViewProperties(R.id.textViewusername,
+		                R.string.showcase_account_title,
+		                R.string.showcase_account_message,
+		                SHOWCASE_LIKE_SCALE));
+		        mViews.show();
+		     // Code to run once
+		     SharedPreferences.Editor editor = wmbPreference.edit();
+		     editor.putBoolean("FIRSTRUNACTIVITY", false);
+		     editor.commit();
+		 }
+		  
+	}
 	 @Override
 	    public void onAttach(Activity activity) {
 	        super.onAttach(activity);
@@ -180,6 +230,7 @@ public class AccountFragment extends Fragment  {
 	          //  .contentLayout(R.layout.account)
 	           // .lightActionBar(actionBarBg == R.drawable.ab_background_light);
 	     //   mFadingHelper.initActionBar(activity);
+	     
 	    }
 		@Override
 		public void onResume() {

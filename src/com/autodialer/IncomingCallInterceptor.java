@@ -17,12 +17,12 @@ public class IncomingCallInterceptor extends BroadcastReceiver {
         if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {                                   // 3
             String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);  // 4
             msg += ". Incoming number is " + incomingNumber;
-            Intent dialogIntent = new Intent(context, IncomingCall.class);
-	    	Bundle b = new Bundle();
-	    	b.putString("MESSAGE", incomingNumber);  
-	    	dialogIntent.putExtras(b);
-	    	dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    	context.startActivity(dialogIntent);
+           
+            Intent intentnew=new Intent(context,CheckContactExistService.class);
+	    
+	   
+	    	   intentnew.putExtra("PHONE", incomingNumber);
+	    	   context.startService(intentnew);	
             // TODO This would be a good place to "Do something when the phone rings" ;-)
             
         }

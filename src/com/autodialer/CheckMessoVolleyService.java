@@ -110,7 +110,7 @@ public void Dailingmainmethod() {
     params.put("pid",user.get("email"));
 	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
 	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
-	CustomRequest request = new CustomRequest(Request.Method.POST, "http://www.globegokartshows.co.ke/Testing/message/messostatuscheck.php", params,
+	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/message/messostatuscheck.php", params,
 			new Response.Listener<JSONObject>() {
 	    @Override
 	    public void onResponse(JSONObject response) {

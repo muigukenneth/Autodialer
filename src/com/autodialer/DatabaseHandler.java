@@ -2,6 +2,7 @@ package com.autodialer;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "contactsManager";
 
     // Contacts table name
-    private static final String TABLE_CONTACTS = "contacts";
+    static final String TABLE_CONTACTS = "contacts";
 
     // Contacts Table Columns names
     private static final String KEY_ID = "id";
@@ -141,7 +142,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	return contact;
     }
+    //converts key id accordingly
+    public String getDetails( String projectid) { 
+    	Cursor cursor = null;
+        String empName = "";
+        SQLiteDatabase db = getReadableDatabase();
+        try{
 
+            cursor = db.rawQuery("SELECT "+ KEY_ID+" FROM "+TABLE_CONTACTS+" WHERE " +KEY_EMAIL+"=?", new String[] {projectid + ""});
+
+            if(cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+                empName = cursor.getString(cursor.getColumnIndex(KEY_ID));
+            }
+
+            return empName;
+        }finally {
+
+            cursor.close();
+        }
+    }
+    //converts key id accordingly
+    public String getDetailsreverse( String projectid) { 
+    	Cursor cursor = null;
+        String empName = "";
+        SQLiteDatabase db = getReadableDatabase();
+        try{
+
+            cursor = db.rawQuery("SELECT "+ KEY_EMAIL+" FROM "+TABLE_CONTACTS+" WHERE " +KEY_ID+"=?", new String[] {projectid + ""});
+
+            if(cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+                empName = cursor.getString(cursor.getColumnIndex(KEY_EMAIL));
+            }
+
+            return empName;
+        }finally {
+
+            cursor.close();
+            db.close();
+        }
+    }
     // Getting All Contacts
     public ArrayList<Contact> Get_Contacts() {
 	try {
@@ -201,7 +244,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Getting contacts Count
-    public int Get_Total_Contacts() {
+    public int Get_Total_Notes() {
 	String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
 	SQLiteDatabase db = this.getReadableDatabase();
 	Cursor cursor = db.rawQuery(countQuery, null);

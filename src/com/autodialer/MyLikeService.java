@@ -56,7 +56,7 @@ public class MyLikeService extends Service {
          params.put("pid",user.get("email"));
    	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
    	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
-   	CustomRequest request = new CustomRequest(Request.Method.POST, "http://www.globegokartshows.co.ke/Testing/status/check_status.php", params,
+   	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/statuscheck/loginstatus.php", params,
    			new Response.Listener<JSONObject>() {
    	    @Override
    	    public void onResponse(JSONObject response) {
@@ -87,20 +87,20 @@ public class MyLikeService extends Service {
  				// In this case you can check how client is forming the api and debug accordingly.
  				// For ServerError 5xx, you can do retry or handle accordingly.
  				if( error instanceof NetworkError) {
- 					Toast.makeText(getApplicationContext(),
- 						     " Check your internet connection ", Toast.LENGTH_SHORT).show();
+ 				//	Toast.makeText(getApplicationContext(),
+ 					//	     " Check your internet connection ", Toast.LENGTH_SHORT).show();
  				} else if( error instanceof ClientError) { 
  				} else if( error instanceof ServerError) {
- 					Toast.makeText(getApplicationContext(),
- 						     "Server error ", Toast.LENGTH_SHORT).show();
+ 					//Toast.makeText(getApplicationContext(),
+ 					//	     "Server error ", Toast.LENGTH_SHORT).show();
  				} else if( error instanceof AuthFailureError) {
  				} else if( error instanceof ParseError) {
  				} else if( error instanceof NoConnectionError) {
- 					Toast.makeText(getApplicationContext(),
- 								     "no internet connection ", Toast.LENGTH_SHORT).show();
+ 				//	Toast.makeText(getApplicationContext(),
+ 					//			     "no internet connection ", Toast.LENGTH_SHORT).show();
  				} else if( error instanceof TimeoutError) {
- 					Toast.makeText(getApplicationContext(),
- 						      "connection timeout ", Toast.LENGTH_SHORT).show();
+ 				//	Toast.makeText(getApplicationContext(),
+ 					//	      "connection timeout ", Toast.LENGTH_SHORT).show();
  				
  				}
  				Intent intent = new Intent(NOTIFICATION);

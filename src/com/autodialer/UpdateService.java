@@ -56,7 +56,7 @@ public class UpdateService extends Service {
  	// params.put("message","1");
  	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
  	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
- 	CustomRequest request = new CustomRequest(Request.Method.POST, "http://www.globegokartshows.co.ke/Testing/status/update_status.php", params,
+ 	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/statuscheck/notloggedin_status.php", params,
  			new Response.Listener<JSONObject>() {
  	    @Override
  	    public void onResponse(JSONObject response) {
@@ -100,7 +100,7 @@ public class UpdateService extends Service {
 								     "no internet connection ", Toast.LENGTH_SHORT).show();
 				} else if( error instanceof TimeoutError) {
 					Toast.makeText(getApplicationContext(),
-						      "connection timeout ", Toast.LENGTH_SHORT).show();
+						      "no internet connection ", Toast.LENGTH_SHORT).show();
 				
 				}
 				Intent intent = new Intent(NOTIFICATION);

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+     <release version="2.2.1" versioncode="2">
+          <change>Added new update notification</change>
+         <change>Changed the layout to be more fluid</change>
+         <change>Incoming call screen loads more faster</change>
+         <change>Disabled proximity sensor during calls</change>
+         <change>Added the no internet update on screen</change>
+         <change>added retrying of network request</change>
+        <change>added a fancy loading bar</change>
+        <change>changes on the dialing screen</change>
+        <change>improved stability</change>
+          <change>added a standard layout for all the screens</change>
+    </release>    
+       <release version="2.2" versioncode="2">
+         <change>Added a customised dialing screen with hangup button</change>
+         <change>Incoming call screen customised with full screen mode</change>
+         <change>Disabled proximity sensor during call</change>
+         <change>minor bug fixes with the phonelistner</change>
+         <change>added outgoing call being triggered by a reciever</change>
+        <change>added enter note after incoming call ends</change>
+        <change>fast response tweeks with the network tasks</change>
+        <change>minor interface changes and notifications</change>
+          <change>increased stability </change>
+    </release>    
+    <release version="2.1" versioncode="2">
+         <change>Added History to add note screen</change>
+         <change>Incoming call screen changed</change>
+         <change>added the enter note to dialing screen</change>
+         <change>changed the username to full name</change>
+         <change>Added crash report and user support</change>
+        <change>Fixed several bugs </change>
+        <change>Button appearance changed on pressed</change>
+        <change>More small layout changes</change>
+    </release>    
+    <release version="1.0" versioncode="1">
+        <change>changed the blue gradient</change>
+        <change>Improved the login speed with a few tweaks</change>
+    </release>      
+</changelog>

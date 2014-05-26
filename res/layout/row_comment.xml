@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#f0f0f0"
+    android:background="@drawable/bg_card"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/post_border_style"
+        android:layout_margin="1dp"
+       
         android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="@drawable/post_background_style"
+            android:layout_margin="1dp"
+           
             android:orientation="horizontal" >
 
            
@@ -31,7 +31,7 @@
                         android:layout_height="wrap_content"
                          android:text="name inakuja hapa "
                         android:gravity="left"
-                        android:textColor="#acacac"
+                          android:textColor="@color/black"
                         android:textStyle="bold" >
                     </TextView>
                     <TextView
@@ -41,7 +41,7 @@
                          android:text="time inakuja hapa "
                          android:layout_marginLeft="50dp"
                         android:gravity="left"
-                        android:textColor="#acacac"
+                       android:textColor="@color/black"
                         android:textStyle="bold" >
                     </TextView>
                     </LinearLayout>
@@ -51,17 +51,18 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:orientation="vertical"
-                android:padding="5dp" >
+                android:padding="1dp" >
 
                
                 <TextView
                     android:id="@+id/notehistory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="2dip"
+                    android:paddingBottom="1dip"
+                    android:textSize="18dp"
                     android:paddingLeft="8dp"
                      android:text="note inakuja hapa"
-                    android:textColor="#888" >
+                    android:textColor="@color/black" >
                 </TextView>
 
                 

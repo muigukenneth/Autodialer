@@ -11,7 +11,9 @@
             backward-compatibility can go here.
         -->
     </style>
-
+<style name="NoTitleDialog" parent="android:style/Theme.Dialog">
+    <item name="android:windowNoTitle">true</item>
+</style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
@@ -144,7 +146,19 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">300dp</item>
     </style>
-    
+    <style name="GNowProgressBar" parent="SmoothProgressBar">
+        <item name="spb_stroke_separator_length">8dp</item>
+        <item name="spb_sections_count">2</item>
+        <item name="spb_speed">1.7</item>
+        <item name="spb_progressiveStart_speed">2</item>
+        <item name="spb_progressiveStop_speed">3.4</item>
+        <item name="spb_interpolator">spb_interpolator_acceleratedecelerate</item>
+        <item name="spb_mirror_mode">true</item>
+        <item name="spb_reversed">true</item>
+        <item name="spb_colors">@array/gplus_colors</item>
+        <item name="spb_progressiveStart_activated">true</item>
+        <item name="spb_generate_background_with_colors">false</item>
+    </style>
      <style name="Item.Sticky">
         <item name="android:background">@color/sticky_item</item>
         <item name="android:layout_height">@dimen/sticky_height</item>
@@ -152,4 +166,74 @@
         <item name="android:textAppearance">?android:textAppearanceLarge</item>
         <item name="android:textColor">@color/sticky_item_text</item>
     </style>
+    <style name="MyListBackContent">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@drawable/background_back</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="MyListFrontContent">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@drawable/background_front</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    
+      <style name="MyListButtonAction">
+        <item name="android:layout_margin">5dp</item>
+          <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">30dp</item>
+     
+    </style>
+    
+      
+      <style name="MyListImage">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:scaleGravity">fill</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="MyListTitle">
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    
+     
+     <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_titleTextAppearance">@style/CustomTitle</item>
+       <item name="sv_detailTextAppearance">@style/CustomDetailText</item>
+       <item name="sv_backgroundColor">#CC0000FF</item>
+         <item name="sv_buttonBackgroundColor">#085FC2</item>
+    <item name="sv_buttonText">I Got That</item>
+    </style>
+
+   <style name="SampleTheme.Sherlock" parent="Theme.Sherlock.Light.DarkActionBar">
+           <item name="menuDrawerStyle">@style/MenuDrawerStyle</item>
+        <item name="showcaseViewStyle">@style/CustomShowcaseTheme</item>
+      <item name="android:actionBarStyle">@style/MyActionBar</item>
+
+         
+    </style>
+
+    <style name="MyActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/Blue</item>
+        <item name="android:titleTextStyle">@style/TitleColor</item>
+    </style>
+
+    <style name="TitleColor" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/White</item>
+    </style>
+    <style name="CustomTitle" parent="TextAppearance.ShowcaseView.Title">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    
+    
+<style name="CustomDetailText" parent="TextAppearance.ShowcaseView.Detail">
+    <item name="android:textColor">#FFFFFF</item>
+</style>
 </resources>
