@@ -20,6 +20,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        
+           <TextView
+            android:id="@+id/signedinas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+          android:textColor="@color/White"
+            android:text="Signed in as"
+            style="@style/MenuDrawer.Widget.Title" />
+        
  <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

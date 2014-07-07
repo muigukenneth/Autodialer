@@ -175,13 +175,13 @@
   <string name="showcase_dailnext_title">How the Sales Pacer works</string>
   <string name="showcase_dailnext_message">Click the next button to go to the next contact.</string>
   <string name="showcase_listview_title">How the Sales Pacer works</string>
-  <string name="showcase_listview_message">The contact to dail will always be displayed here.</string>
+  <string name="showcase_listview_message">The contact to dial will always be displayed here.</string>
    <string name="showcase_history_title">How the Sales Pacer works</string>
   <string name="showcase_history_message">The history of the calls will always be displayed here.</string>
    <string name="showcase_drawer_title">Quick Tour of the Sales Pacer</string>
   <string name="showcase_drawer_message">access the menu from here</string>
    <string name="showcase_refresh_title">Quick Tour of the Sales Pacer</string>
-  <string name="showcase_refresh_message">to refresh the contacts always use this button</string>
+  <string name="showcase_refresh_message">To refresh the contacts always use this button</string>
    <string name="showcase_login_title">Quick Tour of the Sales Pacer</string>
   <string name="showcase_login_message">to logout always use this button</string>
    <string name="showcase_account_title">Quick Tour of the Sales Pacer</string>

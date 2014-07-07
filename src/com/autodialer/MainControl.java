@@ -77,6 +77,9 @@ import android.widget.Toast;
 
 
 
+
+
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.ClientError;
@@ -113,13 +116,15 @@ public class MainControl extends SherlockFragmentActivity   {
     public TextView maindialing;
     public TextView organisegroups;
     public TextView tutorial;
+    public TextView signedin;
     PendingIntent pendingIntent;
     SharedPreferences myPrefsnow;
     private static final float SHOWCASE_KITTEN_SCALE = 1.2f;
     private static final float SHOWCASE_LIKE_SCALE = 0.5f;
     ShowcaseView.ConfigOptions mOptions = new ShowcaseView.ConfigOptions();
     ShowcaseViews mViews;
-    
+    HashMap<String,String> user;
+	 DatabaseHandlerUser dbtwo ; 
     DatabaseHandler db;
     Fragment dailingfragment = new DialFragment();
     Fragment account=new AccountFragment();
@@ -179,8 +184,8 @@ public class MainControl extends SherlockFragmentActivity   {
 				        int resultCode = bundle.getInt(LastStopService.RESULT);
 				        if (resultCode == Activity.RESULT_OK) {
 				        	
-				        	  Toast.makeText(MainControl.this, "last call recalled",
-						             Toast.LENGTH_LONG).show();
+				        //	  Toast.makeText(MainControl.this, "last call recalled",
+						   //          Toast.LENGTH_LONG).show();
 				        //  Toast.makeText(getActivity(),
 				        //      "refreshing ",
 				          //    Toast.LENGTH_LONG).show();
@@ -308,6 +313,9 @@ public class MainControl extends SherlockFragmentActivity   {
 				}
 				
 			}
+			  dbtwo= new DatabaseHandlerUser(MainControl.this);
+			 user = new HashMap<String, String>();
+		     user = dbtwo.getUserDetails();
        // Intent myIntent = new Intent(MainControl.this, CheckMessoVolleyService.class);
        // pendingIntent = PendingIntent.getService(MainControl.this, 0, myIntent, 0);
      //   Intent intent=new Intent(MainControl.this,CheckMessoVolleyService.class);
@@ -322,6 +330,8 @@ public class MainControl extends SherlockFragmentActivity   {
     //    Intent intentonline=new Intent(MainControl.this,CheckOnlineService.class);
 		//MainControl.this.startService(intentonline);	
         maindialing=(TextView)findViewById(R.id.listsizzlingevent);
+        signedin=(TextView)findViewById(R.id.signedinas);
+        signedin.setText("Signed in as "+ user.get("uname"));
         maindialing.setTextColor(getResources().getColor(R.color.blue));
         mMenuDrawer.setActiveView( maindialing);
         FragmentManager fm = getSupportFragmentManager();

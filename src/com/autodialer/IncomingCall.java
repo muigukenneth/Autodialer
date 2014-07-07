@@ -41,8 +41,10 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import android.app.Activity;
 import android.bluetooth.BluetoothHeadset;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Binder;
@@ -120,10 +122,55 @@ private SmoothProgressBar mGoogleNow;
 AudioManager audioManager;
 ImageView loodspeaker;
 ImageView mute;
+int missedcall;
 ImageView  voicerecord;
 ProgressBar loading;
 HashMap<String,String> user;
 private HomeKeyLocker mHomeKeyLocker;
+private BroadcastReceiver receiverthree = new BroadcastReceiver() {
+	 @Override
+	    public void onReceive(Context context, Intent intent) {
+	      Bundle bundle = intent.getExtras();
+	      if (bundle != null) {
+			    //    String string = bundle.getString(DownloadService.FILEPATH);
+			        int resultCode = bundle.getInt("RESULT");
+			        
+			    //  String error = bundle.getString("ERROR");
+			        if (resultCode == 1) {
+			        	mute.setVisibility(View.GONE);
+	        		    voicerecord.setVisibility(View.GONE);
+	        		    loodspeaker.setVisibility(View.GONE);
+	        			  answer.setVisibility(View.GONE);
+	        			  //  serchinghistory.setVisibility(View.GONE);
+	        			  serchinghistory.setText("Missed call from "+contactname);
+	        			    reject.setVisibility(View.GONE);
+	        			    hangup.setVisibility(View.GONE);
+	        			    exit.setVisibility(View.VISIBLE);
+	        			
+	        			    exit.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+	        			    mHomeKeyLocker.unlock();
+	            		    IncomingCall.this.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	            		    CONDITION=true;
+			        	//Toast.makeText(getActivity(),
+						 //    " quite busy ", Toast.LENGTH_SHORT).show();	
+			        	
+			        //	SaveHistory();	
+			    		       
+			        	//}
+			        } else if(resultCode == 2) {
+			        	
+			        	//Toast.makeText(getActivity(),
+						  //  " not busy ", Toast.LENGTH_SHORT).show();
+			        	
+			    	 }else{
+			    				 
+			    		        		 }
+	      
+	 
+	 }
+	      
+	 }   		       
+	  };
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -166,8 +213,7 @@ private HomeKeyLocker mHomeKeyLocker;
   		 arrayOfListhistory = new ArrayList<HistoryParse>();
  		db = new DatabaseHandlerUser(IncomingCall.this);
  	    mVolleyQueue2 = Volley.newRequestQueue(IncomingCall.this);  
- 	   tManager = (TelephonyManager) 
- 	            getSystemService(Context.TELEPHONY_SERVICE);
+ 	   tManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
  	          listener = new ListenToPhoneState();
  	         cd = new ConnectionDetector(IncomingCall.this.getApplicationContext());  
  	   mHomeKeyLocker.lock(IncomingCall.this);
@@ -224,7 +270,7 @@ private HomeKeyLocker mHomeKeyLocker;
         	//  TelephonyManager tm = (TelephonyManager) context
                //       .getSystemService(Context.TELEPHONY_SERVICE);
         	  // Make sure the phone is still ringing
-              tManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            
               if (tManager.getCallState() == TelephonyManager.CALL_STATE_RINGING) {
                  
               
@@ -988,9 +1034,9 @@ private HomeKeyLocker mHomeKeyLocker;
 		  if(CONDITION){
 		      //  super.onBackPressed();
 		        IncomingCall.this.finish();
-		        Intent openMainActivity= new Intent(IncomingCall.this, MainControl.class);
-		        openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		        startActivity(openMainActivity);
+		      //  Intent openMainActivity= new Intent(IncomingCall.this, MainControl.class);
+		      //  openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		       // startActivity(openMainActivity);
 		    }
 	  }
 	  private void answerPhoneHeadsethook(Context context) {
@@ -1022,7 +1068,7 @@ private HomeKeyLocker mHomeKeyLocker;
 
 	  public class ListenToPhoneState extends PhoneStateListener {
 			private boolean isPhoneCalling = false;
-
+			  private boolean ring=false;
 		  public void onCallStateChanged(int state, String incomingNumber)
 		    {
 		        super.onCallStateChanged(state, incomingNumber);
@@ -1039,7 +1085,8 @@ private HomeKeyLocker mHomeKeyLocker;
 		        		    voicerecord.setVisibility(View.GONE);
 		        		    loodspeaker.setVisibility(View.GONE);
 		        			  answer.setVisibility(View.GONE);
-		        			    serchinghistory.setVisibility(View.GONE);
+		        			  //  serchinghistory.setVisibility(View.GONE);
+		        			  serchinghistory.setText("Talked with "+contactname);
 		        			    reject.setVisibility(View.GONE);
 		        			    hangup.setVisibility(View.GONE);
 		        			    exit.setVisibility(View.VISIBLE);
@@ -1070,8 +1117,28 @@ private HomeKeyLocker mHomeKeyLocker;
 		        	  	//	getActivity().startService(intentservicetwo);
 		        	isPhoneCalling = false;
 					}
+		        	  // If phone was ringing(ring=true) and not received(callReceived=false) , then it is a missed call
+		        	else if(ring==true&&isPhoneCalling==false)
+                    {
+		        		mute.setVisibility(View.GONE);
+	        		    voicerecord.setVisibility(View.GONE);
+	        		    loodspeaker.setVisibility(View.GONE);
+	        			  answer.setVisibility(View.GONE);
+	        			  //  serchinghistory.setVisibility(View.GONE);
+	        			  serchinghistory.setText("Missed call from "+contactname);
+	        			    reject.setVisibility(View.GONE);
+	        			    hangup.setVisibility(View.GONE);
+	        			    exit.setVisibility(View.VISIBLE);
+	        			
+	        			    exit.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+	        			    mHomeKeyLocker.unlock();
+	            		    IncomingCall.this.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	            		    CONDITION=true;
+                    }
 		            break;}
 		        case TelephonyManager.CALL_STATE_OFFHOOK:{
+		        	
+		        
 		        	// This entry point is called, when ever the phone attempts to dial a number...
 		        	// here check if history for this number is displayed, if so - display that activity with the history + entry field.
 		        	// if the history for this phone number is not displayed anywhere, then create that activity...
@@ -1101,7 +1168,8 @@ private HomeKeyLocker mHomeKeyLocker;
 		            break;
 		        }
 		        case TelephonyManager.CALL_STATE_RINGING:{
-		        	String IncomingTelephoneNumber = incomingNumber;
+		        //	String IncomingTelephoneNumber = incomingNumber;
+		        	  ring =true;
 		        	//Bring Task to front with Android >= Honeycomb
 	        		//Intent intent = getIntent(getActivity(), MainControl.class);
 		            //CALL_STATE_RINGING
@@ -1119,6 +1187,7 @@ private HomeKeyLocker mHomeKeyLocker;
 	@Override
 	public void onResume() {
 		 tManager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+		 IncomingCall.this. registerReceiver(receiverthree, new IntentFilter(IncomingCallInterceptor.NOTIFICATION));
 		super.onResume();
 		// TODO Auto-generated method stub
 
@@ -1140,6 +1209,7 @@ private HomeKeyLocker mHomeKeyLocker;
 	@Override
 	public void onStop() {
 		super.onStop();
+		IncomingCall.this.unregisterReceiver(receiverthree);
 		// TODO Auto-generated method stub
 
 	}

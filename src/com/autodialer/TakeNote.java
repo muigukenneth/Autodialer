@@ -413,8 +413,8 @@ public class TakeNote extends SherlockActivity {
 		 exit.setOnClickListener( new OnClickListener() {
 		        @Override
 		        public void onClick(View v) {
-		        	 Intent intentnew=new Intent(TakeNote.this,CheckNoteidService.class);
-		        	 TakeNote.this.startService(intentnew);	 
+		        	// Intent intentnew=new Intent(TakeNote.this,CheckNoteidService.class);
+		        	 //TakeNote.this.startService(intentnew);	 
 		        	if(	audioManager.isSpeakerphoneOn()){
 		        		audioManager.setSpeakerphoneOn(false);	
 		        	}
@@ -900,6 +900,7 @@ public class TakeNote extends SherlockActivity {
 							//				     "Note inserted successfully ", Toast.LENGTH_SHORT).show();
 					} else if( error instanceof ClientError) { 
 					} else if( error instanceof ServerError) {
+						  dbtwo.Add_History(name, phone, savenote.getText().toString(), user.get("email"), user.get("uname"));
 						//Toast.makeText(getApplicationContext(),
 							//     "Server error ", Toast.LENGTH_SHORT).show();
 						dialogmessage="server error we are working on it ";
@@ -920,6 +921,7 @@ public class TakeNote extends SherlockActivity {
 					}
 			    	//Toast.makeText(getApplicationContext(),
 					//	     dialogmessage, Toast.LENGTH_SHORT).show();
+			    	 loading.setVisibility(View.GONE);
 			    	 mGoogleNow.progressiveStop();
 						//Intent intent = new Intent(NOTIFICATION);
 					   // intent.putExtra(FILEPATH, outputPath);
@@ -941,7 +943,7 @@ public class TakeNote extends SherlockActivity {
 	public void ShowRetryRequest(){
 		 // mGoogleNow.progressiveStop();
 		int heightInPx2 = getResources()
-			      .getDimensionPixelOffset(R.dimen.custom_crouton_height2);
+			      .getDimensionPixelOffset(R.dimen.custom_crouton_height);
 	  styleretry= new Style.Builder()
 			 .setBackgroundColor(R.color.Yellow)
 			      

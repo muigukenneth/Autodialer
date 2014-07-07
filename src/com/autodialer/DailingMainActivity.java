@@ -16,11 +16,13 @@ import java.util.Map;
 
 
 
+
 import net.simonvt.menudrawer.MenuDrawer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 
 
@@ -233,10 +235,18 @@ public class DailingMainActivity extends SherlockFragment  {
 				        String message = bundle.getString("message");
 				        if (resultCode == Activity.RESULT_OK) {
 				        	try {
+				        	//	Toast.makeText(getActivity(),
+								//		   ""+message, Toast.LENGTH_LONG).show();
 								json = new JSONObject(message);
 								String contactname = json.getString("name");
 								String contactphone = json.getString("deal");
 								String contactid = json.getString("valid");
+								String button = json.getString("gcmText");
+								String call ="myhack";
+								String next ="next";
+								String previous ="previous";
+								if(next.equals(button)){
+								//	nextcall.performClick();
 								 namedisplay.setText(contactname);
 								 phonedisplay.setText(contactphone);
 								 String yourdata = db.getDetails(contactid);
@@ -259,6 +269,46 @@ public class DailingMainActivity extends SherlockFragment  {
 								
 								// stopyalast.setText(contactid);	
 								 
+								}else if(previous.equals(button))   {
+						    //   previouscall.performClick();
+									 namedisplay.setText(contactname);
+									 phonedisplay.setText(contactphone);
+									 String yourdata = db.getDetails(contactid);
+										
+									  if(yourdata!=null)
+									  {
+									 int i=Integer.parseInt(yourdata);
+									 id=i;
+									//int intminus=i-1;
+									SharedPreferences.Editor editor = myPrefsnow.edit();
+									editor.putInt("num", i);
+									editor.commit(); 
+									 GetCount();
+								
+									  }
+					        	}else if(call.equals(button)){
+								 namedisplay.setText(contactname);
+								 phonedisplay.setText(contactphone);
+								 String yourdata = db.getDetails(contactid);
+									
+								  if(yourdata!=null)
+								  {
+								 int i=Integer.parseInt(yourdata);
+								 id=i;
+								//int intminus=i-1;
+								SharedPreferences.Editor editor = myPrefsnow.edit();
+								editor.putInt("num", i);
+								editor.commit(); 
+								 GetCount();
+								//Toast.makeText(MainControl.this,
+								 //   ""+intminus, Toast.LENGTH_LONG).show();
+								  }
+								  // stopyalast.setText(yourdata);
+								   //emaildisplay.setText(""+Integer.parseInt(yourdata));
+								   
+									call();	
+								// stopyalast.setText(contactid);	
+								 
 								 buildercall = new AlertDialog.Builder(getActivity());
 							        buildercall.setMessage("Call for contact Name:"+contactname+" Phone:"+ contactphone +" initiated from web?");
 							        buildercall.setCancelable(true);
@@ -270,7 +320,7 @@ public class DailingMainActivity extends SherlockFragment  {
 							            	//if you added fragment via layout xml
 							            //	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
 							            	//fragment.call();
-							            	call();	
+							            
 							                dialog.cancel();
 							            	
 							            }
@@ -282,8 +332,9 @@ public class DailingMainActivity extends SherlockFragment  {
 							            }
 							        });
 							        alertcall = buildercall.create();
-						    		alertcall.show();		 
-									
+						    		//alertcall.show();		 
+					        	}			 
+					        	
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -301,6 +352,7 @@ public class DailingMainActivity extends SherlockFragment  {
 		      
 		 }   		       
 		  };
+		
 		  private BroadcastReceiver receivertwo = new BroadcastReceiver() {
 				 @Override
 				    public void onReceive(Context context, Intent intent) {
@@ -385,7 +437,7 @@ public class DailingMainActivity extends SherlockFragment  {
 								        	//Toast.makeText(getActivity(),
 											 //    " quite busy ", Toast.LENGTH_SHORT).show();	
 								        	
-								        	SaveHistory();	
+								        //	SaveHistory();	
 								    		       
 								        	//}
 								        } else if(resultCode == 2) {
@@ -402,8 +454,9 @@ public class DailingMainActivity extends SherlockFragment  {
 						      
 						 }   		       
 						  };
-	 private static final float SHOWCASE_KITTEN_SCALE = 1.2f;
+	 private static final float SHOWCASE_KITTEN_SCALE = 1.5f;
 	    private static final float SHOWCASE_LIKE_SCALE = 0.5f;
+	    private static final float CONTACT_LIKE_SCALE = 1.2f;
 	    public static final float SHOWCASE_SPINNER_SCALE = 0.5f;
 	    public static final float SHOWCASE_OVERFLOW_ITEM_SCALE = 1f;
 	    ShowcaseView.ConfigOptions mOptions = new ShowcaseView.ConfigOptions();
@@ -434,7 +487,7 @@ public class DailingMainActivity extends SherlockFragment  {
 	    private boolean isShown = false;
 	    boolean   isShownretry =false;
 	    private boolean   isShownothererrors =false;
-	TextView login;
+//	TextView login;
 	boolean shouldExecuteOnResume;
 	// Button add_btn;
 	ListView Contact_listview;
@@ -491,7 +544,7 @@ ArrayList<ItemParse> arrayOfList;
 	JsonObjectRequest jsonObjRequesttwo;
 	 HashMap<String,String> user;
 	 DatabaseHandlerUser dbtwo ;
-		private RequestQueue mVolleyQueue;
+		//private RequestQueue mVolleyQueue;
 		ProgressDialog pd;
 	//	  private final String TAG_REQUEST = "MY_TAG";
 	 // push  notification messages come here
@@ -557,7 +610,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
     dbHandler=new DatabaseHandler(getActivity());
     user = new HashMap<String, String>();
      user = dbtwo.getUserDetails();
-    login = (TextView) mLinearLayout.findViewById(R.id.textwelcome);
+  //  login = (TextView) mLinearLayout.findViewById(R.id.textwelcome);
     savenote = (EditText) mLinearLayout.findViewById(R.id.etEdit);
     loading=(ProgressBar)mLinearLayout.findViewById(R.id.progress);
 	 addnote=(Button)mLinearLayout.findViewById(R.id.btnadd);
@@ -570,7 +623,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
             getActivity().getSystemService(Context.TELEPHONY_SERVICE);
           listener = new ListenToPhoneState();
           tManager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE); 
-    login.setText(user.get("uname"));
+  //  login.setText(user.get("uname"));
     getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
       //   
     pd = new ProgressDialog(getActivity());
@@ -616,13 +669,13 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		
 		//  call.setVisibility(View.GONE);
 			SharedPreferences wmbPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
-			boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUN4CATELOG", true);
+			boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUN7CATELOG", true);
 			if (isFirstRun)
 			{
 				changeLogDialog.show();
 			    // Code to run once
 			    SharedPreferences.Editor editor = wmbPreference.edit();
-			    editor.putBoolean("FIRSTRUN4CATELOG", false);
+			    editor.putBoolean("FIRSTRUN7CATELOG", false);
 			    editor.commit();
 			}
 
@@ -631,8 +684,9 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		        public void onClick(View v) {
 		        	if(savenote.getText().toString().length() > 0) {
 		        	     // editText is not empty
-		        	 Intent intentnew=new Intent(getActivity(),CheckNoteidService.class);
-		        	 getActivity().startService(intentnew);	 
+		        	// Intent intentnew=new Intent(getActivity(),CheckNoteidService.class);
+		        	// getActivity().startService(intentnew);	
+		        		SaveHistory();
 		        	 loading.setVisibility(View.VISIBLE);
 		        	 mGoogleNow.progressiveStart();
 		        	}
@@ -732,7 +786,7 @@ public void onActivityCreated(Bundle savedInstanceState) {
 	  
 	
 		        SharedPreferences wmbPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		        boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUN4TUTORIAL", true);
+		        boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUN5TUTORIAL", true);
 		        if (isFirstRun)
 		        {
 		        	 mOptions.block = false;
@@ -761,7 +815,7 @@ public void onActivityCreated(Bundle savedInstanceState) {
 				        mViews.addView( new ShowcaseViews.ItemViewProperties(R.id.example_itemphone,
 				                R.string.showcase_listview_title,
 				                R.string.showcase_listview_message,
-				                SHOWCASE_KITTEN_SCALE,mOptions));
+				                CONTACT_LIKE_SCALE,mOptions));
 				        mViews.addView( new ShowcaseViews.ItemViewProperties(R.id.listcontacts,
 				                R.string.showcase_history_title,
 				                R.string.showcase_history_message,
@@ -780,12 +834,18 @@ public void onActivityCreated(Bundle savedInstanceState) {
 		        	  mViews.show(); 
 		            // Code to run once
 		            SharedPreferences.Editor editor = wmbPreference.edit();
-		            editor.putBoolean("FIRSTRUN4TUTORIAL", false);
+		            editor.putBoolean("FIRSTRUN5TUTORIAL", false);
 		            editor.commit();
 		        }
 			         
 		     
 }
+public void onDetach() {
+    super.onDetach();
+    Crouton.cancelAllCroutons();
+    mVolleyQueue2.cancelAll(TAG_REQUEST);
+    }
+
 public void Getcontactdisplayfirst() {
 	 isInternetPresent = cd.isConnectingToInternet();
 
@@ -2589,11 +2649,13 @@ public void Showsuccess(){
 		      
 		      .setImageResource(R.drawable.success_icon)
 		      .setGravity(Gravity.CENTER)
+		      
 		      .setTextColor(android.R.color.white)
 		      .setHeight(heightInPx2)
 		      .build();
  Configuration  configasuccess = new Configuration.Builder()
 				  .setDuration(2000)
+				  
 				// .setInAnimation(android.R.anim.slide_in_left)
 				// .setOutAnimation(android.R.anim.slide_out_right)
 				  .build();	     
@@ -2801,7 +2863,7 @@ private IntentFilter filter = new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL);
 		    	// TODO Auto-generated method stub
 				super.onResume();
 				 
-		    	
+		//	 getActivity(). registerReceiver(receiverchangecall, new IntentFilter(GcmIntentService.NOTIFICATION2));
 			 getActivity(). registerReceiver(receiver, new IntentFilter(GcmIntentService.NOTIFICATION));
 			 getActivity(). registerReceiver(receivertwo, new IntentFilter(CheckBusyService.NOTIFICATION));
 			 getActivity(). registerReceiver(receiverthree, new IntentFilter(CheckNoteidService.NOTIFICATION));
@@ -2809,7 +2871,10 @@ private IntentFilter filter = new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL);
 	         getActivity().registerReceiver(the_receiver, filter);
 			 //tManager.listen(listener, ListenToPhoneState.LISTEN_CALL_STATE);
 			if(shouldExecuteOnResume){
-				GetCountRefresh();
+				Getcontactdisplayfirst();
+				Intent intentnew=new Intent(getActivity(),CheckNoteidService.class);
+	        	 getActivity().startService(intentnew);	 
+				//GetCountRefresh();
 				// Historymainmethodrefresh();
 				// Intent myIntent = new Intent(getActivity(), CheckMessoVolleyService.class);
 				// pendingIntent = PendingIntent.getService(getActivity(), 0, myIntent, 0);
@@ -2863,6 +2928,7 @@ private IntentFilter filter = new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL);
 				super.onStop();
 				Crouton.cancelAllCroutons();
 				getActivity().unregisterReceiver(receiver);
+				//getActivity().unregisterReceiver(receiverchangecall);
 				getActivity().unregisterReceiver(receivertwo);
 				getActivity().unregisterReceiver(receiverthree);
 				getActivity().unregisterReceiver(the_receiver);

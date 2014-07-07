@@ -9,26 +9,57 @@ import android.widget.Toast;
 
 public class IncomingCallInterceptor extends BroadcastReceiver {
 
+   
+    static boolean ring=false;
+    static boolean callReceived=false;
+    public static final String NOTIFICATION = "com.autodialer.IncomingCallInterceptor";
+    
     @Override
-    public void onReceive(Context context, Intent intent) {                                         // 1
-        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);                         // 2
-        String msg = "Phone state changed to " + state;
+    public void onReceive(Context context, Intent intent)
+    {
         
-        if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {                                   // 3
-            String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);  // 4
-            msg += ". Incoming number is " + incomingNumber;
-           
-            Intent intentnew=new Intent(context,CheckContactExistService.class);
-	    
-	   
-	    	   intentnew.putExtra("PHONE", incomingNumber);
-	    	   context.startService(intentnew);	
-            // TODO This would be a good place to "Do something when the phone rings" ;-)
-            
+           // Get the current Phone State
+          String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+          
+          if(state==null)
+              return;
+
+          // If phone state "Rininging"
+          if(state.equals(TelephonyManager.EXTRA_STATE_RINGING))
+          {           
+                    ring =true;
+                   // Get the Caller's Phone Number
+                    String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);  // 4
+                  //  msg += ". Incoming number is " + incomingNumber;
+                   
+                    Intent intentnew=new Intent(context,CheckContactExistService.class);
+        	    
+        	   
+        	    	   intentnew.putExtra("PHONE", incomingNumber);
+        	    	   context.startService(intentnew);	
+            }
+
+
+
+           // If incoming call is received
+          if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))
+           {
+                  callReceived=true;
+            }
+
+
+           // If phone is Idle
+          if (state.equals(TelephonyManager.EXTRA_STATE_IDLE))
+          {
+                    // If phone was ringing(ring=true) and not received(callReceived=false) , then it is a missed call
+                     if(ring==true&&callReceived==false)
+                     {
+                    	 Intent intenttwo = new Intent(NOTIFICATION);
+      				   // intent.putExtra(FILEPATH, outputPath);
+      				    intenttwo.putExtra("RESULT", 1);
+      				  context.sendBroadcast(intenttwo);
+                           ///   Toast.makeText(mContext, "It was A MISSED CALL from : "+callerPhoneNumber, Toast.LENGTH_LONG).show();
+                     }
         }
-        
-      //  Toast.makeText(context, m|sg, Toast.LENGTH_LONG).show();
-
-    }
-
+    }  
 }

@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GcmIntentService extends IntentService{
 	Context context;
@@ -38,7 +39,10 @@ public class GcmIntentService extends IntentService{
     public static final String TAG = "GCM Demo";
     private int result = Activity.RESULT_CANCELED;
     public static final String RESULT = "result";
+    private int result2 = Activity.RESULT_CANCELED;
+    public static final String RESULT2 = "result";
 	  public static final String NOTIFICATION = "com.autodialer.GcmIntentService";
+	  public static final String NOTIFICATION2 = "com.autodialer.GcmIntentService";
 	  JSONObject json;
 	  int i;
 	  String messageType;
@@ -103,6 +107,7 @@ public class GcmIntentService extends IntentService{
 	                }
 
 	                if (isActivityFound) {
+	                	
 	                	 result = Activity.RESULT_OK;
                    	   Intent intentnoma = new Intent(NOTIFICATION);
                   		   // intent.putExtra(FILEPATH, outputPath);
@@ -160,6 +165,66 @@ public class GcmIntentService extends IntentService{
 		        }
 			 GcmBroadcastReceiver.completeWakefulIntent(intent);
 		}
+		else if(i==3){
+			GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+			 messageType = gcm.getMessageType(intent);
+			
+			 if (!extras.isEmpty()) {
+				 
+				 if (GoogleCloudMessaging.
+		                    MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
+		                sendNotification("Send error: " + extras.toString());
+		            } else if (GoogleCloudMessaging.
+		                    MESSAGE_TYPE_DELETED.equals(messageType)) {
+		                sendNotification("Deleted messages on server: " +
+		                        extras.toString());
+		            // If it's a regular GCM message, do some work.
+		            } else if (GoogleCloudMessaging.
+		                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+		                // This loop represents the service doing some work.
+		                for (int i=0; i<5; i++) {
+		                    Log.i(TAG, "Working... " + (i+1)
+		                            + "/5 @ " + SystemClock.elapsedRealtime());
+		                    try {
+		                        Thread.sleep(500);
+		                    } catch (InterruptedException e) {
+		                    }
+		                }
+		                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+		                // Post notification of received message.
+		                //sendNotification("Received: " + extras.toString());
+		              //  sendNotification(msg);
+		                ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+		                List<RunningTaskInfo> services = activityManager
+		                        .getRunningTasks(Integer.MAX_VALUE);
+		                boolean isActivityFound = false;
+
+		                if (services.get(0).topActivity.getPackageName().toString()
+		                        .equalsIgnoreCase( getApplicationContext().getPackageName().toString())) {
+		                    isActivityFound = true;
+		                }
+
+		                if (isActivityFound) {
+		                	
+		                	 result = Activity.RESULT_OK;
+	                   	   Intent intentnoma = new Intent(NOTIFICATION);
+	                  		   // intent.putExtra(FILEPATH, outputPath);
+	                  		    intentnoma.putExtra(RESULT, result);
+	                  		  intentnoma.putExtra("message", msg);
+	                  		  Log.i(TAG, "Intent sent " + result);
+	                  		    sendBroadcast(intentnoma);
+		                   // return null;
+		                } else {
+		                	//  sendNotification(msg); 
+		                         //   return true;
+		                }
+		              
+		              //  return false;
+		                Log.i(TAG, "Received: " + extras.toString());
+		            }
+		        }
+			 GcmBroadcastReceiver.completeWakefulIntent(intent);	
+		}
 	}
 
 
@@ -195,7 +260,7 @@ public class GcmIntentService extends IntentService{
         
      // pending intent is redirection using the deep-link
         Intent resultIntent = new Intent(Intent.ACTION_VIEW);
-        resultIntent.setData(Uri.parse("http://dash.yt/salespacer/login.php"));
+        resultIntent.setData(Uri.parse("http://dash.yt/salespacer/androidapk/Sales%20Pacer%20V2.2.3.apk"));
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
         		resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder =

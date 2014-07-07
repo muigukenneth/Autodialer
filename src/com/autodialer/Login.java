@@ -6,8 +6,10 @@ package com.autodialer;
  * Website:www.learn2crack.com
  **/
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,6 +26,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+
+
+
+
 
 
 
@@ -65,6 +72,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -73,6 +81,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+
+
+
 
 
 
@@ -108,6 +121,7 @@ public class Login extends Activity {
     Button passreset;
     EditText inputEmail;
     EditText inputPassword;
+    TelephonyManager tManager;
     private TextView loginErrorMsg;
     /**
      * Called when the activity is first created.
@@ -135,7 +149,8 @@ public class Login extends Activity {
 	  LinearLayout spinner;
 	  //email and password 
 	  String email,password;
-	  
+	  AlertDialog alertnewdevice;
+	    AlertDialog.Builder buildernewdevice;
 	  public static final String EXTRA_MESSAGE = "message";
 	    public static final String PROPERTY_REG_ID = "registration_id";
 	    private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -146,6 +161,9 @@ public class Login extends Activity {
 	    String regid;
 	    String SENDER_ID = "115389726962";
 	    TextView subheading;
+	    //initialize database for user
+	  
+	    String Imei;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,14 +179,27 @@ public class Login extends Activity {
         loginErrorMsg = (TextView) findViewById(R.id.loginErrorMsg);
         subheading = (TextView) findViewById(R.id.subheading);
       pw = (ProgressWheel) findViewById(R.id.pw_spinner);
-        mVolleyQueue2 = Volley.newRequestQueue(Login.this); 
+        mVolleyQueue2 = Volley.newRequestQueue(Login.this);
+       // String simId=tManager.getSimSerialNumber();
+        
+        //Getting Phone Number
+       // String tnumber=tManager.get
+        
+        //Getting IMEI Number of Devide
+       
+      
         context = getApplicationContext();
         pDialog = new ProgressDialog(Login.this);
+        tManager	 = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        Imei=tManager.getDeviceId();
+        //Getting the SIM card ID
+       
         passreset.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {
-        	Uri uri = Uri.parse("http://www.globegokartshows.co.ke/salespacer/reset.php");
+        	Uri uri = Uri.parse("http://dash.yt/salespacer/reset.php");
         	Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         	startActivity(intent);
+        
        // Intent myIntent = new Intent(view.getContext(), PasswordReset.class);
        // startActivityForResult(myIntent, 0);
        // finish();
@@ -225,18 +256,18 @@ public class Login extends Activity {
                 }
                 else if ( ( !inputEmail.getText().toString().equals("")) )
                 {
-                    Toast.makeText(getApplicationContext(),
-                            "Password field empty", Toast.LENGTH_SHORT).show();
+               	 loginErrorMsg.setText("Password field empty cannot be empty");
+                
                 }
                 else if ( ( !inputPassword.getText().toString().equals("")) )
                 {
-                    Toast.makeText(getApplicationContext(),
-                            "Email field empty", Toast.LENGTH_SHORT).show();
+               	 loginErrorMsg.setText("Email field empty cannot be empty");
+               
                 }
                 else
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Email and Password field are empty", Toast.LENGTH_SHORT).show();
+                {	
+                	loginErrorMsg.setText("Email and Password field are empty");
+                 
                 }
             }
         });
@@ -268,19 +299,24 @@ public class Login extends Activity {
 		@Override
         protected void onPostExecute(String msg) {
           //  mDisplay.append(msg + "\n");
+			Intent intent=new Intent(Login.this,MyLikeService.class);
+         	Login.this.startService(intent);
 			pw.stopSpinning();
-            Intent myIntent = new Intent(Login.this, MainControl.class);
-            startActivityForResult(myIntent, 0);
-          //   finish();
-   	   finish();
-			Toast.makeText(Login.this,
-				      "your device has successfully been registered to our servers", Toast.LENGTH_SHORT).show();
+	            Intent myIntent = new Intent(Login.this, MainControl.class);
+	            startActivityForResult(myIntent, 0);
+	          //   finish();
+	   	  Login.this.finish();
+			//Toast.makeText(Login.this,
+				 //     "your device has successfully been registered to our servers", Toast.LENGTH_SHORT).show();
         }
 		private void sendRegistrationIdToBackend() {
 		      // Your implementation here.
-			DatabaseHandlerUser db = new DatabaseHandlerUser(Login.this);
-			  HashMap<String,String> user = new HashMap<String, String>();
-		       user = db.getUserDetails();
+			 DatabaseHandlerUser db;
+  	 	    
+  	 	    HashMap<String,String> user;
+  	 	  db = new DatabaseHandlerUser(Login.this);
+  			user  = new HashMap<String, String>();
+  		       user = db.getUserDetails();
 				String url = "http://dash.yt/salespacer/android_api/get_device_registration/getdevice.php";
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 	            params.add(new BasicNameValuePair("pid",user.get("email")));
@@ -326,7 +362,9 @@ private boolean checkPlayServices() {
                     PLAY_SERVICES_RESOLUTION_REQUEST).show();
         } else {
             Log.i(TAG, "This device is not supported.");
-            finish();
+          Toast.makeText(Login.this,
+		     "This device is not supported.", Toast.LENGTH_SHORT).show();
+            Login.this.finish();
         }
         return false;
     }
@@ -378,12 +416,38 @@ private static int getAppVersion(Context context) {
         params.put("password",password);
     	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
     	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
-    	CustomRequest request = new CustomRequest(Request.Method.POST, "http://www.globegokartshows.co.ke/salespacer/login_android.php", params,
+    	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/login_android.php", params,
     			new Response.Listener<JSONObject>() {
     	    @Override
     	    public void onResponse(JSONObject response) {
     	    	//parseFlickrImageResponse(response);
     	    //	makeSampleHttpRequest2();
+    	    	String wrongdetails;
+    	 	   String 	compare;
+    	 	try {
+    	 		wrongdetails = response.getString("userdetails");
+    	 		//int busy=Integer.parseInt(contactname);
+    	 	//	Toast.makeText(getApplicationContext(),
+    	 		//		  contactname   , Toast.LENGTH_SHORT).show();
+    	 		compare="wrong";
+    	 				
+    	 		if(compare.equals(wrongdetails) ){//cheking for busy
+    	 			//  result = Activity.RESULT_OK;
+    	 			pw.stopSpinning();
+    				subheading.setText("Please Login to get started");
+    				 spinner.setVisibility(View.GONE);
+    				 inputEmail.setVisibility(View.VISIBLE);
+    				subheading.setVisibility(View.VISIBLE);
+                	 inputPassword.setVisibility(View.VISIBLE);
+                	 btnLogin.setVisibility(View.VISIBLE);
+                	 Btnregister.setVisibility(View.VISIBLE);
+                	 passreset.setVisibility(View.VISIBLE);
+                	 loginErrorMsg.setVisibility(View.VISIBLE);
+    	 			 loginErrorMsg.setText("error in loggin you in incorrect username/password ");
+    	 		//Toast.makeText(getApplicationContext(),
+    	 					//	 contactname, Toast.LENGTH_SHORT).show();
+    	 			    	
+    	 		}else{
     	    	parseFlickrImageResponse(response);
     	        // JSON Parsing
     	    	//Toast.makeText(getActivity(),
@@ -391,7 +455,11 @@ private static int getAppVersion(Context context) {
     	    	 // successfully finished
     	    //  result = Activity.RESULT_OK;
     	  // successfully finished
-    	   
+    	 		}
+    	 		} catch (JSONException e) {
+    	 			// TODO Auto-generated catch block
+    	 			e.printStackTrace();
+    	 		}
     	    	// makeSampleHttpRequest();
     	    	//  pDialog.dismiss();
     	    }
@@ -406,26 +474,27 @@ private static int getAppVersion(Context context) {
     				// In this case you can check how client is forming the api and debug accordingly.
     				// For ServerError 5xx, you can do retry or handle accordingly.
     				if( error instanceof NetworkError) {
-    					Toast.makeText(Login.this,
-    						     " Check your internet connection ", Toast.LENGTH_SHORT).show();
-    					 loginErrorMsg.setText("error in loggin in no internet connection");
+    					//Toast.makeText(Login.this,
+    					//	     " Check your internet connection ", Toast.LENGTH_SHORT).show();
+    					 loginErrorMsg.setText("error in loggin you in no internet connection");
     				} else if( error instanceof ClientError) { 
     				} else if( error instanceof ServerError) {
-    					Toast.makeText(Login.this,
-    						     "Server error ", Toast.LENGTH_SHORT).show();
+    					//Toast.makeText(Login.this,
+    					//	     "Server error we are working on it ", Toast.LENGTH_SHORT).show();
+    					 loginErrorMsg.setText("error in loggin you in please try again later ");
     				} else if( error instanceof AuthFailureError) {
-    					 loginErrorMsg.setText("error in loggin in incorrect username/password ");
+    					 loginErrorMsg.setText("error in loggin you in incorrect username/password ");
     				} else if( error instanceof ParseError) {
-    					 loginErrorMsg.setText("error in loggin in incorrect username/password ");
+    					 loginErrorMsg.setText("error in loggin you in please try again later ");
     				} else if( error instanceof NoConnectionError) {
-    					Toast.makeText(Login.this,
-    								     "no internet connection ", Toast.LENGTH_SHORT).show();
-    					 loginErrorMsg.setText("error in loggin in no internet connection");
+    					//Toast.makeText(Login.this,
+    					//			     "no internet connection ", Toast.LENGTH_SHORT).show();
+    					 loginErrorMsg.setText("error in loggin you in no internet connection");
     					//handle all errors as fast as possible
     				} else if( error instanceof TimeoutError) {
     					//Toast.makeText(Login.this,
     						 //     "connection timeout ", Toast.LENGTH_SHORT).show();
-    					   loginErrorMsg.setText("error in loggin in no internet connection");
+    					   loginErrorMsg.setText("error in loggin you in no internet connection");
     				
     				}
     				// pDialog.dismiss();
@@ -491,14 +560,460 @@ private static int getAppVersion(Context context) {
     				  db.addUser("Null","Null",email,firstname+" "+lastname,"Null",time);
     				 // pDialog.dismiss();
     				//  pw.spin();
-    				  new RegisterBackground().execute();
-    				  pw.setText("Registering your Device..." );
-                  	Intent intent=new Intent(Login.this,MyLikeService.class);
-                  	Login.this.startService(intent);
+    				  sendimei();
+    				 
     			}
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
+    		
     }
+    public void sendimei(){
+    	pw.setText("doing some registration......" );
+    	
+         Map<String,String> params = new HashMap<String, String>();
+         params.put("emailaddress",email);
+         params.put("imei",Imei);
+         params.put("phonetype","android");
+     	
+     	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/get_device_registration/imeinumber.php", params,
+     			new Response.Listener<JSONObject>() {
+     	    @Override
+     	    public void onResponse(JSONObject response) {
+     	    	
+     	    	String success;
+     	    	String change;
+     	 	   String 	compare;
+     	 	   String same;
+     	 	try {
+     	 		success = response.getString("message");
+     	 		//int busy=Integer.parseInt(contactname);
+     	 	//	Toast.makeText(getApplicationContext(),
+     	 		//		  contactname   , Toast.LENGTH_SHORT).show();
+     	 		compare="success";
+     	 		change="change";
+     	 		same="same";
+     	 		if(compare.equals(success)){
+     	 			
+     	 			 new RegisterBackground().execute();
+   				  pw.setText("Registering your Device..." );
+                 	
+     	 		//Toast.makeText(getApplicationContext(),
+     	 			//			 ""+response, Toast.LENGTH_SHORT).show();
+     	 			    	
+     	 		}else if(change.equals(success)) {
+     	 		  DatabaseHandlerUser db;
+     	 	    
+     	 	    HashMap<String,String> user;
+     	 	  db = new DatabaseHandlerUser(Login.this);
+     			user  = new HashMap<String, String>();
+     		       user = db.getUserDetails();
+     	 			 buildernewdevice = new AlertDialog.Builder(Login.this);
+     	 			 buildernewdevice.setMessage(user.get("uname")+" we have detected you are using a new device.We only support One device per account .Do you want to register the new device and discard the previous one?");
+     	 			 buildernewdevice.setCancelable(true);
+     	 			 buildernewdevice.setPositiveButton("Yes",
+				                new DialogInterface.OnClickListener() {
+				            public void onClick(DialogInterface dialog, int id) {
+				            	//FragmentManager fm = getSupportFragmentManager();
+				            	Checkifloggedin();
+				            	//if you added fragment via layout xml
+				            //	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
+				            	//fragment.call();
+				            	
+				                dialog.cancel();
+				            	
+				            }
+				        });
+     	 			 buildernewdevice.setNegativeButton("No",
+				                new DialogInterface.OnClickListener() {
+				            public void onClick(DialogInterface dialog, int id) {
+				            	// new RegisterBackground().execute();
+				   				  pw.setText("restoring  your previous Device..." );
+				   				pw.stopSpinning();
+			    				subheading.setText("Please Login to get started");
+			    				 spinner.setVisibility(View.GONE);
+			    				 inputEmail.setVisibility(View.VISIBLE);
+			    				subheading.setVisibility(View.VISIBLE);
+			                	 inputPassword.setVisibility(View.VISIBLE);
+			                	 btnLogin.setVisibility(View.VISIBLE);
+			                	 Btnregister.setVisibility(View.VISIBLE);
+			                	 passreset.setVisibility(View.VISIBLE);
+			                	 loginErrorMsg.setVisibility(View.VISIBLE);
+			                	 loginErrorMsg.setText("please login with your previous registered device");
+				   				 // Login.this.finish();
+				                dialog.cancel();
+				            }
+				        });
+				        alertnewdevice =  buildernewdevice.create();
+			    		alertnewdevice.show();		 
+         	 			
+                     	
+     	 		}else if(same.equals(success)) {
+     	 			 new RegisterBackground().execute();
+      				  pw.setText("Registering your Device..." );	
+     	 		}
+     	 		  else{	    	
+     	 			 loginErrorMsg.setText("something wrong happened trying to verify your phone try again ");
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	 		}
+     	 		} catch (JSONException e) {
+     	 			// TODO Auto-generated catch block
+     	 			e.printStackTrace();
+     	 		}
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    }
+     	    	//parseFlickrImageResponse(response);
+     	    //	makeSampleHttpRequest2();
+     	    //	parseFlickrImageResponse(response);
+     	        // JSON Parsing
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	   
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    
+     	}, new Response.ErrorListener() {
+     	    @Override
+     	    public void onErrorResponse(VolleyError error) {
+     	    	// pDialog.dismiss();
+     	        // Error handling
+     	    	// Handle your error types accordingly.For Timeout & No connection error, you can show 'retry' button.
+     				// For AuthFailure, you can re login with user credentials.
+     				// For ClientError, 400 & 401, Errors happening on client side when sending api request.
+     				// In this case you can check how client is forming the api and debug accordingly.
+     				// For ServerError 5xx, you can do retry or handle accordingly.
+     				if( error instanceof NetworkError) {
+     				//	Toast.makeText(Login.this,
+     					//	     " Check your internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     				} else if( error instanceof ClientError) { 
+     					 loginErrorMsg.setText("failed phone verification due to client error ");
+     				} else if( error instanceof ServerError) {
+     				//	Toast.makeText(Login.this,
+     					//	     "Server error we are working on it ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification due to server error ");
+     				} else if( error instanceof AuthFailureError) {
+     				//	 loginErrorMsg.setText("error in loggin in incorrect username/password ");
+     				} else if( error instanceof ParseError) {
+     					 loginErrorMsg.setText("failed phone verification please try again later ");
+     				} else if( error instanceof NoConnectionError) {
+     				////	Toast.makeText(Login.this,
+     						//		     "no internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     					//handle all errors as fast as possible
+     				} else if( error instanceof TimeoutError) {
+     					//Toast.makeText(Login.this,
+     						 //     "connection timeout ", Toast.LENGTH_SHORT).show();
+     					   loginErrorMsg.setText("failed phone verification no internet connection");
+     				
+     				}
+     		
+     				// pDialog.dismiss();
+     				pw.stopSpinning();
+    				subheading.setText("Please Login to get started");
+    				 spinner.setVisibility(View.GONE);
+    				 inputEmail.setVisibility(View.VISIBLE);
+    				subheading.setVisibility(View.VISIBLE);
+                	 inputPassword.setVisibility(View.VISIBLE);
+                	 btnLogin.setVisibility(View.VISIBLE);
+                	 Btnregister.setVisibility(View.VISIBLE);
+                	 passreset.setVisibility(View.VISIBLE);
+                	 loginErrorMsg.setVisibility(View.VISIBLE);
+                	// loginErrorMsg.setText(email);
+                    //  loginErrorMsg.setText("Incorrect username/password");
+       			 // shutdownService();
+     			//	Progressbar.setVisibility(View.GONE);
+     	    }
+     	});
+     	mVolleyQueue2.add(request);
+      //  makePostRequest();
+        
 
+     
+	}
+    public void updateimei(){
+    	pw.setText("updating your authentification......" );
+    	
+         Map<String,String> params = new HashMap<String, String>();
+         params.put("emailaddress",email);
+         params.put("imei",Imei);
+         params.put("phonetype","android");
+     	 //http://www.globegokartshows.co.ke/api/comments/addcomment.php
+     	// Create Request http://www.globegokartshows.co.ke/api/likes/eventaddlikes1.php
+     	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/get_device_registration/imeinumberupdate.php", params,
+     			new Response.Listener<JSONObject>() {
+     	    @Override
+     	    public void onResponse(JSONObject response) {
+     	    	
+     	    	String success;
+     	    	String change;
+     	 	   String 	compare;
+     	 	try {
+     	 		success = response.getString("message");
+     	 		//int busy=Integer.parseInt(contactname);
+     	 	//	Toast.makeText(getApplicationContext(),
+     	 		//		  contactname   , Toast.LENGTH_SHORT).show();
+     	 		compare="success";
+     	 		change="change";	
+     	 		if(compare.equals(success)){
+     	 			
+     	 			 new RegisterBackground().execute();
+   				  pw.setText("Registering your New Device..." );
+                 	
+     	 		//Toast.makeText(getApplicationContext(),
+     	 			//			 ""+response, Toast.LENGTH_SHORT).show();
+     	 			    	
+     	 	
+         	 		//Toast.makeText(getApplicationContext(),
+         	 			//			 ""+response, Toast.LENGTH_SHORT).show();
+     	 		}  else{	    	
+     	 			 loginErrorMsg.setText("something wrong happened trying to verify your phone try again ");
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	 		}
+     	 		} catch (JSONException e) {
+     	 			// TODO Auto-generated catch block
+     	 			e.printStackTrace();
+     	 		}
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    }
+     	    	//parseFlickrImageResponse(response);
+     	    //	makeSampleHttpRequest2();
+     	    //	parseFlickrImageResponse(response);
+     	        // JSON Parsing
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	   
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    
+     	}, new Response.ErrorListener() {
+     	    @Override
+     	    public void onErrorResponse(VolleyError error) {
+     	    	// pDialog.dismiss();
+     	        // Error handling
+     	    	// Handle your error types accordingly.For Timeout & No connection error, you can show 'retry' button.
+     				// For AuthFailure, you can re login with user credentials.
+     				// For ClientError, 400 & 401, Errors happening on client side when sending api request.
+     				// In this case you can check how client is forming the api and debug accordingly.
+     				// For ServerError 5xx, you can do retry or handle accordingly.
+     				if( error instanceof NetworkError) {
+     				//	Toast.makeText(Login.this,
+     					//	     " Check your internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     				} else if( error instanceof ClientError) { 
+     					 loginErrorMsg.setText("failed phone verification due to client error ");
+     				} else if( error instanceof ServerError) {
+     				//	Toast.makeText(Login.this,
+     					//	     "Server error we are working on it ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification due to server error ");
+     				} else if( error instanceof AuthFailureError) {
+     				//	 loginErrorMsg.setText("error in loggin in incorrect username/password ");
+     				} else if( error instanceof ParseError) {
+     					 loginErrorMsg.setText("failed phone verification please try again later ");
+     				} else if( error instanceof NoConnectionError) {
+     				////	Toast.makeText(Login.this,
+     						//		     "no internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     					//handle all errors as fast as possible
+     				} else if( error instanceof TimeoutError) {
+     					//Toast.makeText(Login.this,
+     						 //     "connection timeout ", Toast.LENGTH_SHORT).show();
+     					   loginErrorMsg.setText("failed phone verification no internet connection");
+     				
+     				}
+     				
+     				// pDialog.dismiss();
+     				pw.stopSpinning();
+    				subheading.setText("Please Login to get started");
+    				 spinner.setVisibility(View.GONE);
+    				 inputEmail.setVisibility(View.VISIBLE);
+    				subheading.setVisibility(View.VISIBLE);
+                	 inputPassword.setVisibility(View.VISIBLE);
+                	 btnLogin.setVisibility(View.VISIBLE);
+                	 Btnregister.setVisibility(View.VISIBLE);
+                	 passreset.setVisibility(View.VISIBLE);
+                	 loginErrorMsg.setVisibility(View.VISIBLE);
+                	
+     	    }
+     	});
+     	mVolleyQueue2.add(request);
+      //  makePostRequest();
+        
+
+     
+	}
+    public void Checkifloggedin(){
+    	pw.setText("Checking if logged in......" );
+    	
+         Map<String,String> params = new HashMap<String, String>();
+         params.put("emailaddress",email);
+        
+     	
+     	CustomRequest request = new CustomRequest(Request.Method.POST, "http://dash.yt/salespacer/android_api/statuscheck/check_loggin_status.php", params,
+     			new Response.Listener<JSONObject>() {
+     	    @Override
+     	    public void onResponse(JSONObject response) {
+     	    	
+     	    	String success;
+     	    	String change;
+     	 	   String 	compare;
+     	 	   
+     	 	try {
+     	 		success = response.getString("message");
+     	 		//int busy=Integer.parseInt(contactname);
+     	 	//	Toast.makeText(getApplicationContext(),
+     	 		//		  contactname   , Toast.LENGTH_SHORT).show();
+     	 		compare="notloggedin";
+     	 		change="loggedin";
+     	 		
+     	 		if(compare.equals(success)){
+     	 			updateimei();
+     	 			
+                 	
+     	 		//Toast.makeText(getApplicationContext(),
+     	 			//			 ""+response, Toast.LENGTH_SHORT).show();
+     	 			    	
+     	 		}else if(change.equals(success)) {
+     	 		  DatabaseHandlerUser db;
+     	 	    
+     	 	    HashMap<String,String> user;
+     	 	  db = new DatabaseHandlerUser(Login.this);
+     			user  = new HashMap<String, String>();
+     		       user = db.getUserDetails();
+     	 			 buildernewdevice = new AlertDialog.Builder(Login.this);
+     	 			 buildernewdevice.setMessage(user.get("uname")+" please log out in your previous device pefore you can register your new device ?");
+     	 			 buildernewdevice.setCancelable(true);
+     	 			 buildernewdevice.setPositiveButton("Close",
+				                new DialogInterface.OnClickListener() {
+				            public void onClick(DialogInterface dialog, int id) {
+				            	//FragmentManager fm = getSupportFragmentManager();
+				            	pw.stopSpinning();
+			    				subheading.setText("Please Login to get started");
+			    				 spinner.setVisibility(View.GONE);
+			    				 inputEmail.setVisibility(View.VISIBLE);
+			    				subheading.setVisibility(View.VISIBLE);
+			                	 inputPassword.setVisibility(View.VISIBLE);
+			                	 btnLogin.setVisibility(View.VISIBLE);
+			                	 Btnregister.setVisibility(View.VISIBLE);
+			                	 passreset.setVisibility(View.VISIBLE);
+			                	 loginErrorMsg.setVisibility(View.VISIBLE);
+			                	 loginErrorMsg.setText("please log out in your previous device first ");
+				   				 // Login.this.finish();
+				            	//if you added fragment via layout xml
+				            //	DailingMainActivity fragment = (DailingMainActivity)fm.findFragmentByTag("FRAGMENT_TAG");
+				            	//fragment.call();
+				            	//updateimei();
+				                dialog.cancel();
+				            	
+				            }
+				        });
+     	 			
+				        alertnewdevice =  buildernewdevice.create();
+			    	//	alertnewdevice.show();		 
+				        updateimei();	
+                     	
+     	 		}
+     	 		  else{	    	
+     	 			 loginErrorMsg.setText("something wrong happened try again please");
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	 		}
+     	 		} catch (JSONException e) {
+     	 			// TODO Auto-generated catch block
+     	 			e.printStackTrace();
+     	 		}
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    }
+     	    	//parseFlickrImageResponse(response);
+     	    //	makeSampleHttpRequest2();
+     	    //	parseFlickrImageResponse(response);
+     	        // JSON Parsing
+     	    	//Toast.makeText(getActivity(),
+     				//	     "doing the dirty work", Toast.LENGTH_SHORT).show();
+     	    	 // successfully finished
+     	    //  result = Activity.RESULT_OK;
+     	  // successfully finished
+     	   
+     	    	// makeSampleHttpRequest();
+     	    	//  pDialog.dismiss();
+     	    
+     	}, new Response.ErrorListener() {
+     	    @Override
+     	    public void onErrorResponse(VolleyError error) {
+     	    	// pDialog.dismiss();
+     	        // Error handling
+     	    	// Handle your error types accordingly.For Timeout & No connection error, you can show 'retry' button.
+     				// For AuthFailure, you can re login with user credentials.
+     				// For ClientError, 400 & 401, Errors happening on client side when sending api request.
+     				// In this case you can check how client is forming the api and debug accordingly.
+     				// For ServerError 5xx, you can do retry or handle accordingly.
+     				if( error instanceof NetworkError) {
+     				//	Toast.makeText(Login.this,
+     					//	     " Check your internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     				} else if( error instanceof ClientError) { 
+     					 loginErrorMsg.setText("failed phone verification due to client error ");
+     				} else if( error instanceof ServerError) {
+     				//	Toast.makeText(Login.this,
+     					//	     "Server error we are working on it ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification due to server error ");
+     				} else if( error instanceof AuthFailureError) {
+     				//	 loginErrorMsg.setText("error in loggin in incorrect username/password ");
+     				} else if( error instanceof ParseError) {
+     					 loginErrorMsg.setText("failed phone verification please try again later ");
+     				} else if( error instanceof NoConnectionError) {
+     				////	Toast.makeText(Login.this,
+     						//		     "no internet connection ", Toast.LENGTH_SHORT).show();
+     					 loginErrorMsg.setText("failed phone verification no internet connection");
+     					//handle all errors as fast as possible
+     				} else if( error instanceof TimeoutError) {
+     					//Toast.makeText(Login.this,
+     						 //     "connection timeout ", Toast.LENGTH_SHORT).show();
+     					   loginErrorMsg.setText("failed phone verification no internet connection");
+     				
+     				}
+     		
+     				// pDialog.dismiss();
+     				pw.stopSpinning();
+    				subheading.setText("Please Login to get started");
+    				 spinner.setVisibility(View.GONE);
+    				 inputEmail.setVisibility(View.VISIBLE);
+    				subheading.setVisibility(View.VISIBLE);
+                	 inputPassword.setVisibility(View.VISIBLE);
+                	 btnLogin.setVisibility(View.VISIBLE);
+                	 Btnregister.setVisibility(View.VISIBLE);
+                	 passreset.setVisibility(View.VISIBLE);
+                	 loginErrorMsg.setVisibility(View.VISIBLE);
+                	// loginErrorMsg.setText(email);
+                    //  loginErrorMsg.setText("Incorrect username/password");
+       			 // shutdownService();
+     			//	Progressbar.setVisibility(View.GONE);
+     	    }
+     	});
+     	mVolleyQueue2.add(request);
+      //  makePostRequest();
+        
+
+     
+	}
 }
